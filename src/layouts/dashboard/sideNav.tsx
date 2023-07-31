@@ -5,6 +5,7 @@ import Link from "next/link";
 import { items } from "./config";
 import { SideNavItem } from "./sideNavItem";
 import useLocation from "@/hooks/useLocation";
+import { useEffect } from "react";
 
 interface IProps {
   onClose: () => void;

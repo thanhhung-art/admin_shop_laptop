@@ -2,7 +2,6 @@ import React, { ReactNode } from "react";
 import TopNav from "./topNav";
 import SideNav from "./sideNav";
 import { Box } from "@mui/material";
-import zIndex from "@mui/material/styles/zIndex";
 
 interface IProps {
   children: ReactNode;
@@ -11,11 +10,11 @@ interface IProps {
 const DashBoardLayout = ({ children }: IProps) => {
   return (
     <>
-      <TopNav  />
+      <TopNav />
       <SideNav />
       <Box
         sx={{
-          paddingLeft: `${280}px`
+          paddingLeft: `${280}px`,
         }}
       >
         {children}

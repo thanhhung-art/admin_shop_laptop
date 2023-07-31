@@ -1,6 +1,5 @@
 import NextLink from "next/link";
 import { Box, ButtonBase } from "@mui/material";
-import { ReactNode } from "react";
 import { IItems } from "./config";
 
 interface IProps extends IItems {

@@ -5,7 +5,6 @@ import ShoppingBagIcon from "@heroicons/react/24/solid/ShoppingBagIcon";
 import UserIcon from "@heroicons/react/24/solid/UserIcon";
 import UserPlusIcon from "@heroicons/react/24/solid/UserPlusIcon";
 import UsersIcon from "@heroicons/react/24/solid/UsersIcon";
-import XCircleIcon from "@heroicons/react/24/solid/XCircleIcon";
 import { SvgIcon } from "@mui/material";
 import { ReactNode } from "react";
 
@@ -16,7 +15,6 @@ export interface IItems {
   path: string;
   title: string;
 }
-
 
 export const items: IItems[] = [
   {
@@ -38,8 +36,8 @@ export const items: IItems[] = [
     ),
   },
   {
-    title: "Companies",
-    path: "/companies",
+    title: "products",
+    path: "/products",
     icon: (
       <SvgIcon fontSize="small">
         <ShoppingBagIcon />
@@ -79,15 +77,6 @@ export const items: IItems[] = [
     icon: (
       <SvgIcon fontSize="small">
         <UserPlusIcon />
-      </SvgIcon>
-    ),
-  },
-  {
-    title: "Error",
-    path: "/404",
-    icon: (
-      <SvgIcon fontSize="small">
-        <XCircleIcon />
       </SvgIcon>
     ),
   },
