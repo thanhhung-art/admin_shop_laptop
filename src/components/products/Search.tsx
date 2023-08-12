@@ -1,5 +1,5 @@
 import { Card, TextField, Box, Grid, Button } from "@mui/material";
-import React from "react";
+import Link from "next/link";
 
 const SearchLaptop = () => {
   return (
@@ -16,8 +16,9 @@ const SearchLaptop = () => {
           </Box>
         </Grid>
         <Grid item xs={2}>
-
-          <Button sx={{ float: "right"}}>add product</Button>
+          <Link href="/products/add_product">
+            <Button sx={{ float: "right"}}>add product</Button>
+          </Link>
         </Grid>
       </Grid>
     </Card>
