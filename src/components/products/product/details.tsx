@@ -1,4 +1,5 @@
 "use client";
+import { calcXsItem } from "@/utils/calcXsItems";
 import {
   Button,
   Grid,
@@ -7,7 +8,14 @@ import {
   ToggleButtonGroup,
   Typography,
 } from "@mui/material";
-import { useRef, useState, MouseEvent } from "react";
+import {
+  useRef,
+  useState,
+  MouseEvent,
+  ChangeEvent,
+  MutableRefObject,
+  RefObject,
+} from "react";
 
 interface IProps {
   data?: {
@@ -20,6 +28,7 @@ interface IProps {
     rating?: number;
     color: string[];
     brand: string;
+    weight: string;
 
     configure: {
       ram: string;
@@ -32,166 +41,98 @@ interface IProps {
       os: string;
     };
   };
+  onInputChange: ({ name, value }: { name: string; value: string }) => void;
 }
 
-const Details = ({ data }: IProps) => {
-  const refName = useRef<HTMLInputElement>(null);
-  const refPrice = useRef<HTMLInputElement>(null);
-  const refBrand = useRef<HTMLInputElement>(null);
-  const refOs = useRef<HTMLInputElement>(null);
-  const refRam = useRef<HTMLInputElement>(null);
-  const refHardDisk = useRef<HTMLInputElement>(null);
-  const refScreen = useRef<HTMLInputElement>(null);
-  const refCpu = useRef<HTMLInputElement>(null);
-  const refGpu = useRef<HTMLInputElement>(null);
-  const refBattery = useRef<HTMLInputElement>(null);
-  const refCategories = useRef<HTMLInputElement>(null);
-  const refColor = useRef<HTMLInputElement>(null);
-  const refDesc = useRef<HTMLInputElement>(null);
-  const refWeight = useRef<HTMLInputElement>(null);
+interface IRefs {
+  [key: string]: any;
+}
+
+const details = [
+  "name",
+  "price",
+  "brand",
+  "operating system",
+  "ram",
+  "hard drive",
+  "screen",
+  "cpu",
+  "gpu",
+  "battery",
+  "color",
+  "weight",
+  "categories",
+  "description",
+  "instock",
+];
+
+const Details = ({ data, onInputChange }: IProps) => {
   const [stocking, setStocking] = useState("stocking");
+
+  const refs: IRefs = {
+    refName: useRef<HTMLInputElement>(null),
+    refPrice: useRef<HTMLInputElement>(null),
+    refBrand: useRef<HTMLInputElement>(null),
+    refOs: useRef<HTMLInputElement>(null),
+    refRam: useRef<HTMLInputElement>(null),
+    refHardDrive: useRef<HTMLInputElement>(null),
+    refScreen: useRef<HTMLInputElement>(null),
+    refCpu: useRef<HTMLInputElement>(null),
+    refGpu: useRef<HTMLInputElement>(null),
+    refBattery: useRef<HTMLInputElement>(null),
+    refCategories: useRef<HTMLInputElement>(null),
+    refColor: useRef<HTMLInputElement>(null),
+    refDesc: useRef<HTMLInputElement>(null),
+    refWeight: useRef<HTMLInputElement>(null),
+  };
 
   const handleStocking = (e: MouseEvent<HTMLElement>, isStocking: string) => {
     setStocking(isStocking);
   };
 
-  const styles = {
-    root: {
-      background: "blue",
-    },
-    "&.Mui-checked": {
-      background: "white",
-    },
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value, name } = e.target;
+
+    onInputChange({ name, value });
+  };
+
+  const spaceCaseToCamelCase = (text: string) => {
+    const words = text.split(" ");
+    const camelCaseWords = ["ref"];
+
+    for (const word of words) {
+      camelCaseWords.push(word[0].toUpperCase() + word.slice(1));
+    }
+
+    return camelCaseWords.join("");
   };
 
   return (
     <Grid container spacing={2} sx={{ flex: 1 }}>
-      <Grid item xs={12}>
-        <TextField
-          ref={refName}
-          fullWidth
-          defaultValue={data ? data.name : ""}
-          label="Name"
-          multiline
-        />
-      </Grid>
-      <Grid item xs={4}>
-        <TextField
-          ref={refPrice}
-          fullWidth
-          defaultValue={data ? data.price : ""}
-          label="Price"
-          type="number"
-        />
-      </Grid>
-      <Grid item xs={4}>
-        <TextField
-          ref={refBrand}
-          fullWidth
-          defaultValue={data ? data.brand : ""}
-          label="Brand"
-        />
-      </Grid>
-      <Grid item xs={4}>
-        <TextField
-          ref={refOs}
-          fullWidth
-          defaultValue={data ? data.configure.os : ""}
-          label="Operating System"
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <TextField
-          ref={refRam}
-          fullWidth
-          defaultValue={data ? data.configure.ram : ""}
-          label="Ram"
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <TextField
-          ref={refHardDisk}
-          fullWidth
-          defaultValue={data ? data.configure.hardDisk : ""}
-          label="Hard Drive"
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <TextField
-          ref={refScreen}
-          fullWidth
-          defaultValue={data ? data.configure.screen : ""}
-          label="Screen"
-        />
-      </Grid>
-      <Grid item xs={4}>
-        <TextField
-          ref={refCpu}
-          fullWidth
-          defaultValue={data ? data.configure.cpu : ""}
-          label="Cpu"
-        />
-      </Grid>
-      <Grid item xs={4}>
-        <TextField
-          ref={refGpu}
-          fullWidth
-          defaultValue={data ? data.configure.gpu : ""}
-          label="Gpu"
-        />
-      </Grid>
-      <Grid item xs={4}>
-        <TextField
-          ref={refBattery}
-          fullWidth
-          defaultValue={data ? data.configure.battery : ""}
-          label="Battery"
-        />
-      </Grid>
-      <Grid item xs={8}>
-        <TextField
-          ref={refColor}
-          fullWidth
-          defaultValue={data ? data.color.toString() : ""}
-          label="colors"
-        />
-      </Grid>
-      <Grid item xs={4}>
-        <TextField
-          ref={refWeight}
-          fullWidth
-          defaultValue={data ? data.color.toString() : ""}
-          label="weight"
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <TextField
-          ref={refCategories}
-          fullWidth
-          defaultValue={data ? data.categories : ""}
-          label="categories"
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <TextField
-          ref={refDesc}
-          fullWidth
-          defaultValue={data ? data.desc : ""}
-          label="description"
-          multiline
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <ToggleButtonGroup value={stocking} onChange={handleStocking} exclusive>
-          <ToggleButton value="stocking">stocking</ToggleButton>
-          <ToggleButton value="out of stock">out of stock</ToggleButton>
-        </ToggleButtonGroup>
-      </Grid>
-      <Grid item xs={12}>
-        <Button sx={{ float: "right" }} variant="contained">
-          {data ? "edit product" : "add product"}
-        </Button>
-      </Grid>
+      {details.map((e) => (
+        <Grid key={e} item xs={calcXsItem(e)}>
+          {e === "instock" ? (
+            <ToggleButtonGroup
+              value={stocking}
+              onChange={handleStocking}
+              exclusive
+            >
+              <ToggleButton value="stocking">stocking</ToggleButton>
+              <ToggleButton value="out of stock">out of stock</ToggleButton>
+            </ToggleButtonGroup>
+          ) : (
+            <TextField
+              onChange={handleChange}
+              name={e}
+              ref={refs[spaceCaseToCamelCase(e)]}
+              fullWidth
+              defaultValue={data ? data.name : ""}
+              label={e}
+              multiline
+            />
+          )}
+        </Grid>
+      ))}
     </Grid>
   );
 };

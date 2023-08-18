@@ -3,7 +3,7 @@ import { StaticImageData } from "next/image"
 export interface IProduct {
   name: string;
   price: number;
-  desc: string;
+  descriptions: string;
   instock: string;
   img: string;
   categories: string[];
@@ -22,4 +22,6 @@ export interface IProduct {
     os: string;
     gpu: string;
   };
+
+  [key: string]: any
 }
