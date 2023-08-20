@@ -1,3 +1,4 @@
+import ReactQueryProvider from "@/components/providers/ReactQueryProvider";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -18,9 +19,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <>
+        <ReactQueryProvider>
           {children}
-        </>
+        </ReactQueryProvider>
       </body>
     </html>
   );
