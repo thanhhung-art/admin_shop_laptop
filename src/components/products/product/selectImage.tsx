@@ -1,22 +1,25 @@
 "use client";
 import { Card, Box, Button } from "@mui/material";
 import Image from "next/image";
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, Dispatch, MutableRefObject, SetStateAction, useRef, useState } from "react";
 
-const ShowImage = () => {
-  const [imageSrc, setImageSrc] = useState<string | null>(null);
-  const base64Image = useRef<string | ArrayBuffer | null>("");
+interface IProps {
+  base64Img: MutableRefObject<string | ArrayBuffer | null>
+}
+
+const ShowImage = ({ base64Img }: IProps) => {
+  const [imgSrc, setImgSrc] = useState<string | null>(null);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = (e) => {
-        base64Image.current = reader.result;
+        base64Img.current = reader.result;
       };
       reader.readAsDataURL(file);
       const fileURL = URL.createObjectURL(file);
-      setImageSrc(fileURL);
+      setImgSrc(fileURL);
     }
   };
 
@@ -30,14 +33,14 @@ const ShowImage = () => {
       >
         <Box
           sx={{
-            background: `${imageSrc ? "none" : "#ccc"}`,
+            background: `${imgSrc ? "none" : "#ccc"}`,
             minWidth: 400,
             minHeight: 280,
           }}
         >
-          {imageSrc && (
+          {imgSrc && (
             <Image
-              src={imageSrc}
+              src={imgSrc}
               alt="preview image"
               width={400}
               height={280}

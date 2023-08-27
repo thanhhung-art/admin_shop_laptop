@@ -10,7 +10,7 @@ export const calcXsItem = (name: string) => {
       return 4;
     case "ram":
       return 12;
-    case "hard drive":
+    case "hard disk":
       return 12;
     case "screen":
       return 12;

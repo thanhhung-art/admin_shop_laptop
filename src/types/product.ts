@@ -1,14 +1,12 @@
-import { StaticImageData } from "next/image"
-
 export interface IProduct {
   name: string;
   price: number;
   descriptions: string;
   instock: string;
   img: string;
-  categories: string[];
+  categories: string;
   rating?: number;
-  color: string[];
+  color: string | string[];
   brand: string;
   weight: string;
 
@@ -21,7 +19,14 @@ export interface IProduct {
     battery: string;
     os: string;
     gpu: string;
+
+    [key: string]: any
   };
 
   [key: string]: any
+}
+
+export interface IGetProducts {
+  msg: string,
+  data: IProduct[],
 }

@@ -15,6 +15,8 @@ import {
   ChangeEvent,
   MutableRefObject,
   RefObject,
+  Dispatch,
+  SetStateAction,
 } from "react";
 
 interface IProps {
@@ -42,6 +44,8 @@ interface IProps {
     };
   };
   onInputChange: ({ name, value }: { name: string; value: string }) => void;
+  stocking: string;
+  setStocking: Dispatch<SetStateAction<string>>
 }
 
 interface IRefs {
@@ -54,7 +58,7 @@ const details = [
   "brand",
   "operating system",
   "ram",
-  "hard drive",
+  "hard disk",
   "screen",
   "cpu",
   "gpu",
@@ -66,16 +70,15 @@ const details = [
   "instock",
 ];
 
-const Details = ({ data, onInputChange }: IProps) => {
-  const [stocking, setStocking] = useState("stocking");
+const Details = ({ data, onInputChange, stocking, setStocking }: IProps) => {
 
   const refs: IRefs = {
     refName: useRef<HTMLInputElement>(null),
     refPrice: useRef<HTMLInputElement>(null),
     refBrand: useRef<HTMLInputElement>(null),
-    refOs: useRef<HTMLInputElement>(null),
+    refOperatingSystem: useRef<HTMLInputElement>(null),
     refRam: useRef<HTMLInputElement>(null),
-    refHardDrive: useRef<HTMLInputElement>(null),
+    refHardDisk: useRef<HTMLInputElement>(null),
     refScreen: useRef<HTMLInputElement>(null),
     refCpu: useRef<HTMLInputElement>(null),
     refGpu: useRef<HTMLInputElement>(null),
