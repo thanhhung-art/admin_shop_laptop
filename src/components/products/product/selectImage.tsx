@@ -1,14 +1,15 @@
 "use client";
 import { Card, Box, Button } from "@mui/material";
 import Image from "next/image";
-import { ChangeEvent, Dispatch, MutableRefObject, SetStateAction, useRef, useState } from "react";
+import { ChangeEvent, MutableRefObject, useState } from "react";
 
 interface IProps {
+  img?: string;
   base64Img: MutableRefObject<string | ArrayBuffer | null>
 }
 
-const ShowImage = ({ base64Img }: IProps) => {
-  const [imgSrc, setImgSrc] = useState<string | null>(null);
+const ShowImage = ({ base64Img, img }: IProps) => {
+  const [imgSrc, setImgSrc] = useState<string | null>(() => img ? img : null);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

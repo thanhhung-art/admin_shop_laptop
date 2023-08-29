@@ -31,7 +31,7 @@ const ListProducts = () => {
                 alignContent: "center",
               }}
             >
-              <Link href="/products/1">
+              <Link href={`/products/${p._id}`}>
                 <Image
                   src={p.img}
                   width={180}
@@ -41,7 +41,7 @@ const ListProducts = () => {
               </Link>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'center', my: 0.5 }}>
-              <Box sx={{  }}>
+              <Box>
                 {[1, 2, 3, 4, 5].map((e) => (
                   <svg
                     key={e}

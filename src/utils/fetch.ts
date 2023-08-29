@@ -1,4 +1,4 @@
-import { IGetProducts, IProduct } from "@/types/product";
+import { IGetProduct, IGetProducts, IProduct } from "@/types/product";
 import axios from "axios";
 
 export const Fetch = axios.create({
@@ -12,4 +12,9 @@ export const Fetch = axios.create({
 export const getProducts = async () => {
   const res = await Fetch('/products')
   return res.data as IGetProducts
+}
+
+export const getProduct = async (id: string) => {
+  const res = await Fetch(`/products/${id}`)
+  return res.data as IGetProduct
 }

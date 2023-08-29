@@ -1,4 +1,5 @@
 "use client";
+import { IProduct } from "@/types/product";
 import { calcXsItem } from "@/utils/calcXsItems";
 import {
   Button,
@@ -10,42 +11,17 @@ import {
 } from "@mui/material";
 import {
   useRef,
-  useState,
   MouseEvent,
   ChangeEvent,
-  MutableRefObject,
-  RefObject,
   Dispatch,
   SetStateAction,
 } from "react";
 
 interface IProps {
-  data?: {
-    name: string;
-    price: number;
-    desc: string;
-    instock: string;
-    img: string;
-    categories: string[];
-    rating?: number;
-    color: string[];
-    brand: string;
-    weight: string;
-
-    configure: {
-      ram: string;
-      hardDisk: string;
-      cpu: string;
-      gpu: string;
-      screen: string;
-      camera: string;
-      battery: string;
-      os: string;
-    };
-  };
+  data?: IProduct;
   onInputChange: ({ name, value }: { name: string; value: string }) => void;
   stocking: string;
-  setStocking: Dispatch<SetStateAction<string>>
+  setStocking: Dispatch<SetStateAction<string>>;
 }
 
 interface IRefs {
@@ -63,6 +39,7 @@ const details = [
   "cpu",
   "gpu",
   "battery",
+  "camera",
   "color",
   "weight",
   "categories",
@@ -70,8 +47,18 @@ const details = [
   "instock",
 ];
 
-const Details = ({ data, onInputChange, stocking, setStocking }: IProps) => {
+const configure = [
+  "ram",
+  "hard disk",
+  "operating system",
+  "cpu",
+  "gpu",
+  "screen",
+  "camera",
+  "battery",
+];
 
+const Details = ({ data, onInputChange, stocking, setStocking }: IProps) => {
   const refs: IRefs = {
     refName: useRef<HTMLInputElement>(null),
     refPrice: useRef<HTMLInputElement>(null),
@@ -110,6 +97,12 @@ const Details = ({ data, onInputChange, stocking, setStocking }: IProps) => {
     return camelCaseWords.join("");
   };
 
+  const camelCaseToSpaceCase = (text: string) => {
+    if (text === "operating system") return "os";
+    if (text === "hard disk") return "hardDisk";
+    return text;
+  };
+
   return (
     <Grid container spacing={2} sx={{ flex: 1 }}>
       {details.map((e) => (
@@ -129,7 +122,13 @@ const Details = ({ data, onInputChange, stocking, setStocking }: IProps) => {
               name={e}
               ref={refs[spaceCaseToCamelCase(e)]}
               fullWidth
-              defaultValue={data ? data.name : ""}
+              defaultValue={
+                data
+                  ? configure.includes(e)
+                    ? data.configure[camelCaseToSpaceCase(e)]
+                    : data[e]
+                  : ""
+              }
               label={e}
               multiline
             />

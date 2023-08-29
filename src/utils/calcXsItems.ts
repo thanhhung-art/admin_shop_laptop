@@ -20,10 +20,12 @@ export const calcXsItem = (name: string) => {
       return 4;
     case "battery":
       return 4;
-    case "color":
-      return 8;
-    case "weight":
+    case "camera":
       return 4;
+    case "color":
+      return 6;
+    case "weight":
+      return 2;
     case "categories":
       return 12;
     case "description":
