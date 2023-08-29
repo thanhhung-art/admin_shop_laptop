@@ -61,11 +61,9 @@ const AddProduct = () => {
     productInfo.current.instock = stocking;
     productInfo.current.rating = 0;
 
-    if (typeof productInfo.current.color === "string")
-      productInfo.current.color = convertStrToList(productInfo.current.color);
-
     if (typeof base64Image.current === "string")
       productInfo.current.img = base64Image.current;
+
     addProductMutation.mutate(productInfo.current);
   };
 

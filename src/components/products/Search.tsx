@@ -17,7 +17,7 @@ const SearchLaptop = () => {
         </Grid>
         <Grid item xs={2}>
           <Link href="/products/add_product">
-            <Button sx={{ float: "right"}}>add product</Button>
+            <Button variant='contained' sx={{ float: "right"}}>add product</Button>
           </Link>
         </Grid>
       </Grid>

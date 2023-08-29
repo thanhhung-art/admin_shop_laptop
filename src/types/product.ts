@@ -26,7 +26,14 @@ export interface IProduct {
   [key: string]: any
 }
 
-export interface IGetProducts {
-  msg: string,
+interface IData {
+  msg: string
+}
+
+export interface IGetProducts extends IData {
   data: IProduct[],
+}
+
+export interface IGetProduct extends IData {
+  data: IProduct
 }
