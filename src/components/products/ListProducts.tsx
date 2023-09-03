@@ -66,7 +66,7 @@ const ListProducts = () => {
             <Typography
               align="center"
               fontSize="small"
-              sx={{ maxWidth: "250px", margin: "auto" }}
+              sx={{ maxWidth: "320px", margin: "auto" }}
             >
               {p.name.slice(0, 110) + " ..."}
             </Typography>

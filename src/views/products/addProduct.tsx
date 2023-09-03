@@ -6,7 +6,6 @@ import { useRef, useState } from "react";
 import { IProduct } from "@/types/product";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Fetch } from "@/utils/fetch";
-import { convertStrToList } from "@/utils/convertStrToList";
 
 const AddProduct = () => {
   const queryClient = useQueryClient();

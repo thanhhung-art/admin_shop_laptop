@@ -74,6 +74,7 @@ const Details = ({ data, onInputChange, stocking, setStocking }: IProps) => {
     refColor: useRef<HTMLInputElement>(null),
     refDesc: useRef<HTMLInputElement>(null),
     refWeight: useRef<HTMLInputElement>(null),
+    refCamera: useRef<HTMLInputElement>(null),
   };
 
   const handleStocking = (e: MouseEvent<HTMLElement>, isStocking: string) => {
@@ -82,7 +83,6 @@ const Details = ({ data, onInputChange, stocking, setStocking }: IProps) => {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
-
     onInputChange({ name, value });
   };
 
