@@ -1,5 +1,5 @@
 "use client";
-import { Box, Button, Container, Stack } from "@mui/material";
+import { Box, Button, CircularProgress, Container, Stack } from "@mui/material";
 import ShowImage from "@/components/products/product/selectImage";
 import AddDetails from "@/components/products/product/details";
 import { useRef, useState } from "react";
@@ -12,6 +12,7 @@ const AddProduct = () => {
   const [stocking, setStocking] = useState("stocking");
   const productInfo = useRef<IProduct>({ configure: {}, price: 0 } as IProduct);
   const base64Image = useRef<string | ArrayBuffer | null>("");
+  const [refresh, setRefresh] = useState(false);
 
   const addProductMutation = useMutation(
     (data: IProduct) => {
@@ -62,8 +63,12 @@ const AddProduct = () => {
 
     if (typeof base64Image.current === "string")
       productInfo.current.img = base64Image.current;
-
     addProductMutation.mutate(productInfo.current);
+  };
+
+  const handleRefresh = () => {
+    productInfo.current = { configure: {}, price: 0 } as IProduct;
+    setRefresh(!refresh);
   };
 
   return (
@@ -81,16 +86,31 @@ const AddProduct = () => {
             onInputChange={handleChange}
             stocking={stocking}
             setStocking={setStocking}
+            refresh={refresh}
           />
         </Stack>
         <Box>
-          <Button
-            variant="contained"
-            sx={{ float: "right" }}
-            onClick={handleSubmit}
-          >
-            add product
-          </Button>
+          <Stack direction="row" justifyContent="left" spacing={2}>
+            <Button
+              variant="outlined"
+              sx={{ ml: "auto" }}
+              onClick={handleRefresh}
+            >
+              refresh
+            </Button>
+            <Button
+              variant="contained"
+              sx={{ width: "135px" }}
+              onClick={handleSubmit}
+              disabled={addProductMutation.isLoading}
+            >
+              {addProductMutation.isLoading ? (
+                <CircularProgress color="inherit" size={26} />
+              ) : (
+                "add product"
+              )}
+            </Button>
+          </Stack>
         </Box>
       </Container>
     </Box>

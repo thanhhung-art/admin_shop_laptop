@@ -1,81 +1,53 @@
 "use client";
 import { IProduct } from "@/types/product";
-import { calcXsItem } from "@/utils/calcXsItems";
 import {
-  Button,
   Grid,
   TextField,
   ToggleButton,
   ToggleButtonGroup,
-  Typography,
 } from "@mui/material";
 import {
-  useRef,
   MouseEvent,
   ChangeEvent,
   Dispatch,
   SetStateAction,
+  useEffect,
+  createRef,
+  useMemo,
 } from "react";
+import { calcXsItem } from "@/utils/calcXsItems";
 
 interface IProps {
   data?: IProduct;
   onInputChange: ({ name, value }: { name: string; value: string }) => void;
   stocking: string;
   setStocking: Dispatch<SetStateAction<string>>;
+  refresh?: boolean;
 }
 
-interface IRefs {
-  [key: string]: any;
-}
-
-const details = [
-  "name",
-  "price",
-  "brand",
-  "operating system",
-  "ram",
-  "hard disk",
-  "screen",
-  "cpu",
-  "gpu",
-  "battery",
-  "camera",
-  "color",
-  "weight",
-  "categories",
-  "description",
-  "instock",
-];
-
-const configure = [
-  "ram",
-  "hard disk",
-  "operating system",
-  "cpu",
-  "gpu",
-  "screen",
-  "camera",
-  "battery",
-];
-
-const Details = ({ data, onInputChange, stocking, setStocking }: IProps) => {
-  const refs: IRefs = {
-    refName: useRef<HTMLInputElement>(null),
-    refPrice: useRef<HTMLInputElement>(null),
-    refBrand: useRef<HTMLInputElement>(null),
-    refOperatingSystem: useRef<HTMLInputElement>(null),
-    refRam: useRef<HTMLInputElement>(null),
-    refHardDisk: useRef<HTMLInputElement>(null),
-    refScreen: useRef<HTMLInputElement>(null),
-    refCpu: useRef<HTMLInputElement>(null),
-    refGpu: useRef<HTMLInputElement>(null),
-    refBattery: useRef<HTMLInputElement>(null),
-    refCategories: useRef<HTMLInputElement>(null),
-    refColor: useRef<HTMLInputElement>(null),
-    refDesc: useRef<HTMLInputElement>(null),
-    refWeight: useRef<HTMLInputElement>(null),
-    refCamera: useRef<HTMLInputElement>(null),
-  };
+const Details = ({
+  data,
+  onInputChange,
+  stocking,
+  setStocking,
+  refresh,
+}: IProps) => {
+  const refs = useMemo(() => new Map(), []);
+  refs.set("name", createRef<HTMLInputElement>());
+  refs.set("price", createRef<HTMLInputElement>());
+  refs.set("brand", createRef<HTMLInputElement>());
+  refs.set("operating system", createRef<HTMLInputElement>());
+  refs.set("ram", createRef<HTMLInputElement>());
+  refs.set("hard disk", createRef<HTMLInputElement>());
+  refs.set("screen", createRef<HTMLInputElement>());
+  refs.set("cpu", createRef<HTMLInputElement>());
+  refs.set("gpu", createRef<HTMLInputElement>());
+  refs.set("battery", createRef<HTMLInputElement>());
+  refs.set("camera", createRef<HTMLInputElement>());
+  refs.set("color", createRef<HTMLInputElement>());
+  refs.set("weight", createRef<HTMLInputElement>());
+  refs.set("categories", createRef<HTMLInputElement>());
+  refs.set("description", createRef<HTMLInputElement>());
 
   const handleStocking = (e: MouseEvent<HTMLElement>, isStocking: string) => {
     setStocking(isStocking);
@@ -86,55 +58,46 @@ const Details = ({ data, onInputChange, stocking, setStocking }: IProps) => {
     onInputChange({ name, value });
   };
 
-  const spaceCaseToCamelCase = (text: string) => {
-    const words = text.split(" ");
-    const camelCaseWords = ["ref"];
-
-    for (const word of words) {
-      camelCaseWords.push(word[0].toUpperCase() + word.slice(1));
-    }
-
-    return camelCaseWords.join("");
-  };
-
-  const camelCaseToSpaceCase = (text: string) => {
+  function spaceCaseToCamelCase(text: string) {
     if (text === "operating system") return "os";
     if (text === "hard disk") return "hardDisk";
     return text;
-  };
+  }
+
+  useEffect(() => {
+    if (refresh) {
+      refs.forEach((value, key) => {
+        value.current.value = "";
+      });
+    }
+  }, [refresh, refs]);
 
   return (
     <Grid container spacing={2} sx={{ flex: 1 }}>
-      {details.map((e) => (
-        <Grid key={e} item xs={calcXsItem(e)}>
-          {e === "instock" ? (
-            <ToggleButtonGroup
-              value={stocking}
-              onChange={handleStocking}
-              exclusive
-            >
-              <ToggleButton value="stocking">stocking</ToggleButton>
-              <ToggleButton value="out of stock">out of stock</ToggleButton>
-            </ToggleButtonGroup>
-          ) : (
-            <TextField
-              onChange={handleChange}
-              name={e}
-              ref={refs[spaceCaseToCamelCase(e)]}
-              fullWidth
-              defaultValue={
-                data
-                  ? configure.includes(e)
-                    ? data.configure[camelCaseToSpaceCase(e)]
-                    : data[e]
-                  : ""
-              }
-              label={e}
-              multiline
-            />
-          )}
+      {Array.from(refs).map(([key, ref]) => (
+        <Grid item key={key} xs={calcXsItem(key)}>
+          <TextField
+            inputRef={ref}
+            onChange={handleChange}
+            name={key}
+            fullWidth
+            defaultValue={
+              data
+                ? data[spaceCaseToCamelCase(key)] ||
+                  data.configure[spaceCaseToCamelCase(key)]
+                : ""
+            }
+            label={key}
+            multiline
+          />
         </Grid>
       ))}
+      <Grid item xs={12}>
+        <ToggleButtonGroup value={stocking} onChange={handleStocking} exclusive>
+          <ToggleButton value="stocking">stocking</ToggleButton>
+          <ToggleButton value="out of stock">out of stock</ToggleButton>
+        </ToggleButtonGroup>
+      </Grid>
     </Grid>
   );
 };
