@@ -78,6 +78,7 @@ const Details = ({
         <Grid item key={key} xs={calcXsItem(key)}>
           <TextField
             inputRef={ref}
+            type={key === 'price' ? 'number' : 'text'}
             onChange={handleChange}
             name={key}
             fullWidth

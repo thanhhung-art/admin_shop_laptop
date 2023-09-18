@@ -1,14 +1,15 @@
 "use client";
 import { Card, Box, Button } from "@mui/material";
 import Image from "next/image";
-import { ChangeEvent, MutableRefObject, useState } from "react";
+import { ChangeEvent, MutableRefObject, useEffect, useState } from "react";
 
 interface IProps {
   img?: string;
   base64Img: MutableRefObject<string | ArrayBuffer | null>
+  refresh?: boolean
 }
 
-const ShowImage = ({ base64Img, img }: IProps) => {
+const ShowImage = ({ base64Img, img, refresh }: IProps) => {
   const [imgSrc, setImgSrc] = useState<string | null>(() => img ? img : null);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -23,6 +24,12 @@ const ShowImage = ({ base64Img, img }: IProps) => {
       setImgSrc(fileURL);
     }
   };
+
+  useEffect(() => {
+    if (refresh) {
+      setImgSrc(null);
+    }
+  }, [refresh])
 
   return (
     <Box>
@@ -44,7 +51,8 @@ const ShowImage = ({ base64Img, img }: IProps) => {
               src={imgSrc}
               alt="preview image"
               width={400}
-              height={280}
+              height={270}
+              objectFit="contain"
             />
           )}
         </Box>

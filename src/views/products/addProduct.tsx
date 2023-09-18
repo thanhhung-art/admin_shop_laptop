@@ -20,7 +20,7 @@ const AddProduct = () => {
     },
     {
       onSuccess() {
-        queryClient.invalidateQueries({ queryKey: ["addProduct"] });
+        //queryClient.invalidateQueries({ queryKey: ["addProduct"] });
       },
     }
   );
@@ -64,6 +64,7 @@ const AddProduct = () => {
     if (typeof base64Image.current === "string")
       productInfo.current.img = base64Image.current;
     addProductMutation.mutate(productInfo.current);
+    console.log(productInfo.current.price);
   };
 
   const handleRefresh = () => {
@@ -81,7 +82,7 @@ const AddProduct = () => {
     >
       <Container maxWidth="xl">
         <Stack direction="row" spacing={2}>
-          <ShowImage base64Img={base64Image} />
+          <ShowImage base64Img={base64Image} refresh={refresh}/>
           <AddDetails
             onInputChange={handleChange}
             stocking={stocking}
