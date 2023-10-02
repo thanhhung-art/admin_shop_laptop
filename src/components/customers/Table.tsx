@@ -1,5 +1,6 @@
 "use client";
 import { ICustomer } from "@/types/customer";
+import { Fetch, getUsers } from "@/utils/fetch";
 import {
   Box,
   Card,
@@ -14,6 +15,7 @@ import {
   TableRow,
   TableSortLabel,
 } from "@mui/material";
+import { useQuery } from "@tanstack/react-query";
 
 interface IProps {
   data: ICustomer[];
@@ -66,6 +68,9 @@ const headCells: readonly HeadCell[] = [
 ];
 
 const TableCustomers = ({ data }: IProps) => {
+  const customers = useQuery(['user'], getUsers )
+  console.log(customers.data);
+
   return (
     <Card>
       <TableContainer>

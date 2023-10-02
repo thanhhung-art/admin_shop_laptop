@@ -1,3 +1,4 @@
+import { IGetUsers } from "@/types/customer";
 import { IGetProduct, IGetProducts, IProduct } from "@/types/product";
 import axios from "axios";
 
@@ -17,4 +18,9 @@ export const getProducts = async () => {
 export const getProduct = async (id: string) => {
   const res = await Fetch(`/products/${id}`)
   return res.data as IGetProduct
+}
+
+export const getUsers = async () => {
+  const res = await Fetch('/users')
+  return res.data as IGetUsers
 }

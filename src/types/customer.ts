@@ -17,3 +17,8 @@ export interface ICustomer {
 export interface TableData extends ICustomer {
   [key: string]: any
 }
+
+export interface IGetUsers {
+  data: ICustomer[]
+  msg: string
+}
