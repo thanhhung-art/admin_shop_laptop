@@ -1,6 +1,6 @@
 "use client";
 import { ICustomer } from "@/types/customer";
-import { Fetch, getUsers } from "@/utils/fetch";
+import { getUsers } from "@/utils/fetch";
 import {
   Box,
   Card,
@@ -36,10 +36,10 @@ const headCells: readonly HeadCell[] = [
     label: "all",
   },
   {
-    id: "name",
+    id: "username",
     numeric: false,
     disablePadding: false,
-    label: "name",
+    label: "username",
   },
   {
     id: "email",
@@ -68,7 +68,7 @@ const headCells: readonly HeadCell[] = [
 ];
 
 const TableCustomers = ({ data }: IProps) => {
-  const customers = useQuery(['user'], getUsers )
+  const customers = useQuery(['customers'], getUsers )
   console.log(customers.data);
 
   return (
@@ -106,7 +106,7 @@ const TableCustomers = ({ data }: IProps) => {
           <TableBody>
             {data.map((row) => {
               return (
-                <TableRow key={row.name} role="checkbox">
+                <TableRow key={row.username} role="checkbox">
                   <TableCell padding="checkbox">
                     <Checkbox
                       color="primary"
@@ -122,12 +122,12 @@ const TableCustomers = ({ data }: IProps) => {
                     scope="row"
                     padding="none"
                   >
-                    {row.name}
+                    {row._id}
                   </TableCell>
-                  <TableCell align="left">{row.name}</TableCell>
+                  <TableCell align="left">{row.username}</TableCell>
                   <TableCell align="left">{row.email}</TableCell>
-                  <TableCell align="left">{row.address.city}</TableCell>
-                  <TableCell align="left">{row.phone}</TableCell>
+                  <TableCell align="left">{row.address || 'unknow'}</TableCell>
+                  <TableCell align="left">{row.phone || 'unknow'}</TableCell>
                   <TableCell align="left">{row.createdAt + ""}</TableCell>
                 </TableRow>
               );

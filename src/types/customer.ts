@@ -1,17 +1,11 @@
 export interface ICustomer {
-  id: string;
-  address: {
-    city: string;
-    country: string;
-    state?: string;
-    street: string;
-    name?: undefined | string;
-  };
-  avatar: string;
+  _id: string;
+  username: string;
   createdAt: Date;
   email: string;
-  name: string;
-  phone: string;
+  isadmin: boolean;
+  phone?: string;
+  address?: string;
 }
 
 export interface TableData extends ICustomer {
