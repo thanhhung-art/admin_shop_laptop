@@ -42,7 +42,8 @@ const TopNav = () => {
         width: {
           lg: `calc(100% - ${280}px)`,
         },
-        zIndex: (theme) => theme.zIndex.appBar,
+        zIndex: (theme) => theme.zIndex.drawer + 1,
+        borderBottom: '1px solid rgba(0,0,0,0.12)',
       }}
     >
       <Stack
