@@ -9,11 +9,11 @@ import {
   Typography,
 } from "@mui/material";
 import EnhancedTable from "@/components/orders/table";
-import { useQuery } from "@tanstack/react-query";
-import { getOrders } from "@/utils/fetch";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { getOrders, updateOrder } from "@/utils/fetch";
 import { useMemo, useState } from "react";
 import CloseIcon from "@heroicons/react/24/solid/XMarkIcon";
-import { IOrder } from "@/types/order";
+import { IOrder, IOrderUpdate } from "@/types/order";
 import Details from "@/components/orders/Details";
 import ListProducts from "@/components/orders/ListProducts";
 
@@ -22,8 +22,16 @@ const Orders = () => {
   const [open, setOpen] = useState(false);
   const [currOrderId, setCurrOrderId] = useState("");
 
-  const currOrder: IOrder = useMemo(() => {
-    return data?.data.find((order: IOrder) => order._id === currOrderId);
+  const updateOrderMutation = useMutation((data: IOrderUpdate<IOrder>) => {
+    return updateOrder(currOrderId, data)
+  })
+
+  const currOrder: IOrder | null = useMemo(() => {
+    if (data?.data) {
+      const indexOrder = data.data.findIndex((order: IOrder) => order._id === currOrderId);
+      return data.data[indexOrder]
+    }
+    return null
   }, [data, currOrderId]);
 
   const handleCloseDrawer = () => setOpen(false);
@@ -35,8 +43,16 @@ const Orders = () => {
     setOpen(true)
   };
 
-  if (!data) return <div>loading</div>;
+  const handleApproveOrder = () => {
+    updateOrderMutation.mutate({ status: 'shipped' });
+  }
 
+  const handleRejectOrder = () => {
+    updateOrderMutation.mutate({ status: 'cancelled'});
+  }
+
+  if (!data) return <div>loading</div>;
+  
   return (
     <Box
       component="main"
@@ -98,11 +114,10 @@ const Orders = () => {
           )}
 
           <Stack direction="row" justifyContent="flex-end">
-            <Button color="primary" variant="contained" sx={{ mr: 2, borderRadius: 10 }}>Approve</Button>
-            <Button color="secondary" variant="outlined" sx={{ borderRadius: 10 }}>Reject</Button>
+            <Button onClick={handleApproveOrder} color="primary" variant="contained" sx={{ mr: 2, borderRadius: 10 }}>Approve</Button>
+            <Button onClick={handleRejectOrder} color="secondary" variant="outlined" sx={{ borderRadius: 10 }}>Reject</Button>
           </Stack>
-
-          <ListProducts products={currOrder.products} />
+          { open && currOrderId && currOrder !== null && <ListProducts products={currOrder.products} />}
         </Box>
       </Drawer>
     </Box>

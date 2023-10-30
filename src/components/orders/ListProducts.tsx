@@ -1,7 +1,15 @@
 "use client";
 import { IProduct } from "@/types/product";
 import { getProducts } from "@/utils/fetch";
-import { Box, Card, List, ListItem, Stack, Tooltip, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  List,
+  ListItem,
+  Stack,
+  Tooltip,
+  Typography,
+} from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 import Image from "next/image";
@@ -30,8 +38,6 @@ const ListProducts = ({ products }: IProps) => {
     return result;
   }, [products, data]);
 
-  console.log(productsInOrder);
-
   return (
     <Box sx={{ mt: 2 }}>
       <Typography variant="h6" component="h4" sx={{ fontSize: "20px" }}>
@@ -41,18 +47,17 @@ const ListProducts = ({ products }: IProps) => {
         {productsInOrder.map((p) => (
           <ListItem key={p._id}>
             <Card sx={{ p: 1 }}>
-              <Stack direction='row' sx={{ gap: 1 }}>
+              <Stack direction="row" sx={{ gap: 1 }}>
                 <Box>
-                  <Image
-                    src={p.img}
-                    width={120}
-                    height={60}
-                    alt="laptop image"
-                  />
+                  <Box sx={{ position: "relative", height: 40, width: 80 }}>
+                    <Image src={p.img} fill alt="laptop image" style={{ objectFit: 'contain' }} />
+                  </Box>
                 </Box>
                 <Box>
                   <Tooltip title={p.name}>
-                    <Typography fontSize={12}>{p.name.slice(0, 30)}...</Typography>
+                    <Typography fontSize={12}>
+                      {p.name.slice(0, 30)}...
+                    </Typography>
                   </Tooltip>
                   <Typography fontSize={12}>${p.price}</Typography>
                   <Typography fontSize={12}>x{p.quantity}</Typography>

@@ -27,6 +27,16 @@ const Details = ({
   note,
   email,
 }: IProps) => {
+
+  const dateObj = new Date(date);
+  const hours = dateObj.getHours();
+  const minutes = dateObj.getMinutes();
+  const dateReformated = dateObj.toLocaleDateString(navigator.language, {
+    year: 'numeric',
+    day: '2-digit',
+    month: '2-digit'
+  })
+
   return (
     <Box sx={{ mt: 4 }}>
       <Typography variant="h6" component="h4" sx={{ fontSize: "20px" }}>
@@ -100,9 +110,9 @@ const Details = ({
             Date
           </Typography>
           <Typography variant="h6" component="h2" fontSize={14}>
-            {date}
+            {hours}: {minutes} - {dateReformated}
           </Typography>
-        </ListItem>
+        </ListItem> 
         <ListItem>
           <Typography
             variant="h6"

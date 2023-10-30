@@ -28,6 +28,7 @@ import Switch from "@mui/material/Switch";
 import DeleteIcon from "@heroicons/react/24/solid/TrashIcon";
 import { visuallyHidden } from "@mui/utils";
 import { IOrder } from "@/types/order";
+import { Chip } from "@mui/material";
 
 interface IProps {
   orders: IOrder[];
@@ -264,6 +265,13 @@ export default function EnhancedTable({
 
   const isSelected = (id: string) => selected.indexOf(id) !== -1;
 
+  const handleColorStatusOrder = (status: "string" | "shipped" | "pending"| 'cancelled') => {
+    if (status === 'pending') return 'secondary'
+    if (status === 'cancelled') return 'error'
+
+    return 'primary'
+  }
+
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - orders.length) : 0;
@@ -309,6 +317,7 @@ export default function EnhancedTable({
               {visibleRows.map((row, index) => {
                 const isItemSelected = isSelected(row._id);
                 const labelId = `enhanced-table-checkbox-${index}`;
+                const color = handleColorStatusOrder(row.status as 'pending' | 'shipped' | 'cancelled')
 
                 return (
                   <TableRow
@@ -376,7 +385,7 @@ export default function EnhancedTable({
                       }}
                       align="right"
                     >
-                      {row.status}
+                      <Chip label={row.status} color={color} />
                     </TableCell>
                   </TableRow>
                 );

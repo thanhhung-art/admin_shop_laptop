@@ -1,4 +1,5 @@
 import { IGetUsers } from "@/types/customer";
+import { IGetOrder, IGetOrders, IOrder, IOrderUpdate } from "@/types/order";
 import { IGetProduct, IGetProducts } from "@/types/product";
 import axios from "axios";
 
@@ -27,5 +28,10 @@ export const getUsers = async () => {
 
 export const getOrders = async () => {
   const res = await Fetch('/orders')
-  return res.data
+  return res.data as IGetOrders
+}
+
+export const updateOrder = async (id: string, data: IOrderUpdate<IOrder>) => {
+  const res = await Fetch.put('/orders/' + id, data)
+  return res.data as IGetOrder
 }

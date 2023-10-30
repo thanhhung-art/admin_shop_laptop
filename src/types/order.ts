@@ -17,3 +17,19 @@ export interface IOrder {
   totalPrice: number
   createdAt: string
 }
+
+export type IOrderUpdate<T> = {
+  [P in keyof T]?: T[P];
+};
+
+interface IData {
+  msg: string
+}
+
+export interface IGetOrders extends IData {
+  data: IOrder[],
+}
+
+export interface IGetOrder extends IData {
+  data: IOrder,
+}
