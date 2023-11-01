@@ -16,6 +16,11 @@ export const getProducts = async () => {
   return res.data as IGetProducts
 }
 
+export const getInfiniteProducts = async (page: number) => {
+  const res = await Fetch(`/products?page=${page}`)
+  return res.data as IGetProducts
+}
+
 export const getProduct = async (id: string) => {
   const res = await Fetch(`/products/${id}`)
   return res.data as IGetProduct

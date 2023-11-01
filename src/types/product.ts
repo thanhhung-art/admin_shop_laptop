@@ -32,7 +32,11 @@ interface IData {
 }
 
 export interface IGetProducts extends IData {
-  data: IProduct[],
+  data: {
+    products: IProduct[],
+    nextPage: number,
+    lastPage: number,
+  },
 }
 
 export interface IGetProduct extends IData {
