@@ -1,24 +1,33 @@
 "use client";
-import { IGetProducts, IProduct } from "@/types/product";
-import { Box, Button, Card, Grid, SvgIcon, Typography } from "@mui/material";
+import { IGetProducts, IGetProductsInfinity, IProduct } from "@/types/product";
+import {
+  Box,
+  Button,
+  Card,
+  Grid,
+  Stack,
+  SvgIcon,
+  Typography,
+} from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { getInfiniteProducts, getProducts } from "@/utils/fetch";
+import { useInfiniteQuery } from "@tanstack/react-query";
+import { getProductsInfinity } from "@/utils/fetch";
 import IconStar from "@heroicons/react/24/outline/StarIcon";
 import IconStarSolid from "@heroicons/react/24/solid/StarIcon";
 
 const ListProducts = () => {
   const { data, isLoading, isError, fetchNextPage, hasNextPage } =
-    useInfiniteQuery<IGetProducts>(
-      ["getProducts"],
-      ({ pageParam = 0 }) => getInfiniteProducts(pageParam),
+    useInfiniteQuery<IGetProductsInfinity>(
+      ["getProductsInfinity"],
+      ({ pageParam = 0 }) => getProductsInfinity(pageParam),
       {
         getNextPageParam: (lastPage, allPage) => {
           return lastPage.data.nextPage === lastPage.data.lastPage
             ? undefined
             : lastPage.data.nextPage;
         },
+        staleTime: 1000 * 60 * 5,
       }
     );
 
@@ -79,9 +88,11 @@ const ListProducts = () => {
             </Grid>
           ))}
       </Grid>
-      {hasNextPage && (
-        <Button onClick={() => fetchNextPage()}>show more</Button>
-      )}
+      <Stack direction="row" justifyContent="center">
+        {hasNextPage && (
+          <Button onClick={() => fetchNextPage()}>show more</Button>
+        )}
+      </Stack>
     </>
   );
 };

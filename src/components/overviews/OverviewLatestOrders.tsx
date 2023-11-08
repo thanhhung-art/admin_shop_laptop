@@ -1,3 +1,5 @@
+"use client";
+import { getOrders } from "@/utils/fetch";
 import ArrowRightIcon from "@heroicons/react/24/solid/ArrowRightIcon";
 import {
   Box,
@@ -13,28 +15,21 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-
-const statusMap = {
-  pending: "warning",
-  delivered: "success",
-  refunded: "error",
-};
+import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 interface IProps {
-  orders: {
-    id: string;
-    ref: string;
-    amount: number;
-    customer: {
-      name: string;
-    };
-    createdAt: number;
-    status: string;
-  }[];
   sx: object;
 }
 
-export const OverviewLatestOrders = ({ sx, orders }: IProps) => {
+export const OverviewLatestOrders = ({ sx }: IProps) => {
+  const { data, isLoading } = useQuery(["getOrdersLatest"], () =>
+    getOrders("latest")
+  );
+  const router = useRouter();
+
+  if (isLoading) return <div>loading</div>;
+
   return (
     <Card sx={sx}>
       <CardHeader title="Latest Orders" />
@@ -43,21 +38,31 @@ export const OverviewLatestOrders = ({ sx, orders }: IProps) => {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Order</TableCell>
+              <TableCell>Phone</TableCell>
               <TableCell>Customer</TableCell>
               <TableCell sortDirection="desc">Date</TableCell>
               <TableCell>Status</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {orders.map((order) => {
-              const createdAt = order.createdAt;
+            {data?.data.map((order) => {
+              const dateObj = new Date(order.createdAt);
+              const hours = dateObj.getHours();
+              const minutes = dateObj.getMinutes();
+              const dateReformated = dateObj.toLocaleDateString(
+                navigator.language,
+                {
+                  year: "numeric",
+                  day: "2-digit",
+                  month: "2-digit",
+                }
+              );
 
               return (
-                <TableRow hover key={order.id}>
-                  <TableCell>{order.ref}</TableCell>
-                  <TableCell>{order.customer.name}</TableCell>
-                  <TableCell>{createdAt}</TableCell>
+                <TableRow hover key={order._id}>
+                  <TableCell>{order.phone}</TableCell>
+                  <TableCell>{order.username}</TableCell>
+                  <TableCell>{`${hours}: ${minutes} - ${dateReformated}`}</TableCell>
                   <TableCell>{order.status}</TableCell>
                 </TableRow>
               );
@@ -77,6 +82,7 @@ export const OverviewLatestOrders = ({ sx, orders }: IProps) => {
           }
           size="small"
           variant="text"
+          onClick={() => router.push("/orders")}
         >
           View all
         </Button>

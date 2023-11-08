@@ -10,6 +10,7 @@ export interface IProduct {
   color: string | string[];
   brand: string;
   weight: string;
+  updatedAt: string;
 
   configure: {
     ram: string;
@@ -20,25 +21,25 @@ export interface IProduct {
     battery: string;
     os: string;
     gpu: string;
-
-    [key: string]: any
   };
-
-  [key: string]: any
 }
 
 interface IData {
-  msg: string
+  msg: string;
 }
 
 export interface IGetProducts extends IData {
+  data: IProduct[];
+}
+
+export interface IGetProductsInfinity extends IData {
   data: {
-    products: IProduct[],
-    nextPage: number,
-    lastPage: number,
-  },
+    products: IProduct[];
+    nextPage: number;
+    lastPage: number;
+  };
 }
 
 export interface IGetProduct extends IData {
-  data: IProduct
+  data: IProduct;
 }
