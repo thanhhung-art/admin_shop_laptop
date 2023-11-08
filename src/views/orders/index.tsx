@@ -18,7 +18,7 @@ import Details from "@/components/orders/Details";
 import ListProducts from "@/components/orders/ListProducts";
 
 const Orders = () => {
-  const { data } = useQuery(["getOrders"], getOrders);
+  const { data, isLoading } = useQuery(["getOrders"], () => getOrders());
   const [open, setOpen] = useState(false);
   const [currOrderId, setCurrOrderId] = useState("");
 
@@ -50,6 +50,8 @@ const Orders = () => {
   const handleRejectOrder = () => {
     updateOrderMutation.mutate({ status: 'cancelled'});
   }
+
+  if (isLoading) return <div>loading</div>
 
   if (!data) return <div>loading</div>;
   
