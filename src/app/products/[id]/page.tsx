@@ -1,7 +1,21 @@
+import { queryClient } from "@/lib/react_query/queryClient";
+import { ReactQueryHydrate } from "@/lib/react_query/reactQueryHydrate";
+import { getProduct } from "@/utils/fetch";
 import ProductDetails from "@/views/products/productDetails";
+import { dehydrate } from "@tanstack/react-query";
 
-const page = ({ params }: { params: { id: string }}) => {
-  return <ProductDetails param={params.id} />
+const page = async ({ params }: { params: { id: string } }) => {
+  const queryClientLocal = queryClient();
+  await queryClientLocal.prefetchQuery(["getProduct", params.id], () =>
+    getProduct(params.id)
+  );
+  const dehydratedState = dehydrate(queryClientLocal);
+
+  return (
+    <ReactQueryHydrate state={dehydratedState}>
+      <ProductDetails param={params.id} />
+    </ReactQueryHydrate>
+  );
 };
 
 export default page;

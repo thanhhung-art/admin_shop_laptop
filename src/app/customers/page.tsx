@@ -1,16 +1,21 @@
+import { queryClient } from "@/lib/react_query/queryClient";
+import { ReactQueryHydrate } from "@/lib/react_query/reactQueryHydrate";
+import { getUsers } from "@/utils/fetch";
 import Customers from "@/views/customers";
-// import { useSelection } from 'src/hooks/use-selection';
-// import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
-// import { CustomersTable } from 'src/sections/customer/customers-table';
-// import { CustomersSearch } from 'src/sections/customer/customers-search';
-// import { applyPagination } from 'src/utils/apply-pagination';
+import { dehydrate } from "@tanstack/react-query";
+import { Suspense } from "react";
 
-const Page = () => {
+const page = async () => {
+  const queryClientLocal = queryClient();
+  await queryClientLocal.prefetchQuery(["getCustomers"], getUsers);
+  const dehydratedState = dehydrate(queryClientLocal);
   return (
-    <>
-      <Customers />
-    </>
+    <ReactQueryHydrate state={dehydratedState}>
+      <Suspense fallback={<div>loading</div>}>
+        <Customers />
+      </Suspense>
+    </ReactQueryHydrate>
   );
 };
 
-export default Page;
+export default page;
