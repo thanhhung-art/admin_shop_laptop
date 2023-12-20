@@ -1,5 +1,4 @@
 "use client";
-import { IProduct } from "@/types/product";
 import { getProduct } from "@/utils/fetch";
 import {
   Box,

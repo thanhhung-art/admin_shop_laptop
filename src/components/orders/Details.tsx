@@ -1,4 +1,7 @@
-import { Box, List, ListItem, Stack, Typography } from "@mui/material";
+'use client'
+import { Box, List, ListItem, Typography } from "@mui/material";
+import { AES, enc } from "crypto-js";
+import { useMemo } from "react";
 
 interface IProps {
   id: string;
@@ -13,6 +16,8 @@ interface IProps {
   address2?: string;
   note: string;
 }
+
+const pass_secret = process.env.NEXT_PUBLIC_PASS_SECRET || "";
 
 const Details = ({
   id,
@@ -36,6 +41,11 @@ const Details = ({
     day: '2-digit',
     month: '2-digit'
   })
+
+  const cardInfo = useMemo(() => {
+    if (payment === 'cod') return 'COD'
+    return AES.decrypt(payment.split(' ')[1], pass_secret).toString(enc.Utf8) || ""
+  }, [payment])
 
   return (
     <Box sx={{ mt: 4 }}>
@@ -138,7 +148,7 @@ const Details = ({
             Payment
           </Typography>
           <Typography variant="h6" component="h2" fontSize={14}>
-            {payment}
+            {cardInfo || 'empty'}
           </Typography>
         </ListItem>
         <ListItem>

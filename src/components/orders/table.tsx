@@ -375,9 +375,11 @@ export default function EnhancedTable({
                       onClick={() => {
                         handleToggleDrawer(row._id), setCurrOrderId(row._id);
                       }}
-                      align="right"
+                      align="left"
                     >
-                      {row.payment}
+                      <Typography>
+                        {row.payment.includes('credit_card') ? 'Credit Card' : 'COD'}
+                      </Typography>
                     </TableCell>
                     <TableCell
                       onClick={() => {
