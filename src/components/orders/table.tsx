@@ -29,6 +29,9 @@ import DeleteIcon from "@heroicons/react/24/solid/TrashIcon";
 import { visuallyHidden } from "@mui/utils";
 import { IOrder } from "@/types/order";
 import { Chip } from "@mui/material";
+import { useMutation } from "@tanstack/react-query";
+import { Fetch } from "@/utils/fetch";
+import { AxiosRequestConfig } from "axios";
 
 interface IProps {
   orders: IOrder[];
@@ -149,10 +152,11 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 
 interface EnhancedTableToolbarProps {
   numSelected: number;
+  handleDeleteOrders: () => void;
 }
 
 function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
-  const { numSelected } = props;
+  const { numSelected, handleDeleteOrders } = props;
 
   return (
     <Toolbar
@@ -189,9 +193,9 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
       )}
       {numSelected > 0 ? (
         <Tooltip title="Delete">
-          <IconButton>
-            <DeleteIcon />
-          </IconButton>
+          <Box sx={{ cursor: "pointer" }} onClick={handleDeleteOrders}>
+            <DeleteIcon width={20} height={20} />
+          </Box>
         </Tooltip>
       ) : (
         <Tooltip title="Filter list">
@@ -212,6 +216,12 @@ export default function EnhancedTable({
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const deleteOrdersMutation = useMutation({
+    mutationFn: (data: AxiosRequestConfig<{ ids: readonly string[] }>) => {
+      return Fetch.delete("/orders", data);
+    },
+  });
 
   const handleRequestSort = (
     event: MouseEvent<unknown>,
@@ -265,12 +275,20 @@ export default function EnhancedTable({
 
   const isSelected = (id: string) => selected.indexOf(id) !== -1;
 
-  const handleColorStatusOrder = (status: "string" | "shipped" | "pending"| 'cancelled') => {
-    if (status === 'pending') return 'secondary'
-    if (status === 'cancelled') return 'error'
+  const handleColorStatusOrder = (
+    status: "string" | "shipped" | "pending" | "cancelled"
+  ) => {
+    if (status === "pending") return "secondary";
+    if (status === "cancelled") return "error";
 
-    return 'primary'
-  }
+    return "primary";
+  };
+
+  const handleDelete = () => {
+    if (selected.length > 0) {
+      deleteOrdersMutation.mutate({ data: { ids: selected } });
+    }
+  };
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -298,7 +316,10 @@ export default function EnhancedTable({
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar
+          numSelected={selected.length}
+          handleDeleteOrders={handleDelete}
+        />
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -317,7 +338,9 @@ export default function EnhancedTable({
               {visibleRows.map((row, index) => {
                 const isItemSelected = isSelected(row._id);
                 const labelId = `enhanced-table-checkbox-${index}`;
-                const color = handleColorStatusOrder(row.status as 'pending' | 'shipped' | 'cancelled')
+                const color = handleColorStatusOrder(
+                  row.status as "pending" | "shipped" | "cancelled"
+                );
 
                 return (
                   <TableRow
@@ -378,7 +401,9 @@ export default function EnhancedTable({
                       align="left"
                     >
                       <Typography>
-                        {row.payment.includes('credit_card') ? 'Credit Card' : 'COD'}
+                        {row.payment.includes("credit_card")
+                          ? "Credit Card"
+                          : "COD"}
                       </Typography>
                     </TableCell>
                     <TableCell
