@@ -55,7 +55,7 @@ const ListProducts = ({ products }: IProps) => {
       <List>
         {productsInOrder.map((p, i) => (
           <ListItem key={p?._id || i}>
-            <Card sx={{ p: 1 }}>
+            <Card sx={{ p: 1, width: '100%' }}>
               <Stack direction="row" sx={{ gap: 1 }}>
                 <Box>
                   <Box sx={{ position: "relative", height: 40, width: 80 }}>
@@ -72,7 +72,7 @@ const ListProducts = ({ products }: IProps) => {
                 <Box>
                   <Tooltip title={p?.name}>
                     <Typography fontSize={12}>
-                      {p?.name?.slice(0, 30) || ""}...
+                      {p?.name?.slice(0, 40) || ""}...
                     </Typography>
                   </Tooltip>
                   <Typography fontSize={12}>${p?.price || 0}</Typography>
