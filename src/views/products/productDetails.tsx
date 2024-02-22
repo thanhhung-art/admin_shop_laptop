@@ -5,11 +5,12 @@ import AddDetails from "@/components/products/product/details";
 import { Fetch, getProduct } from "@/utils/fetch";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { IGetProduct, IProduct } from "@/types/product";
-import { useEffect, useRef, useState } from "react";
+import { ChangeEvent, useEffect, useRef, useState } from "react";
 
 const ProductDetails = ({ param }: { param: string }) => {
   const queryClient = useQueryClient();
   const [stocking, setStocking] = useState("stocking");
+  const [featured, setFeatured] = useState(false);
   const productInfo = useRef<IProduct>({ configure: {} } as IProduct);
   const base64Image = useRef<string | ArrayBuffer | null>("");
 
@@ -35,7 +36,7 @@ const ProductDetails = ({ param }: { param: string }) => {
   };
 
   const handleChange = ({ name, value }: { name: string; value: string }) => {
-    name = spaceCaseToCamelCase(name);
+    const key = spaceCaseToCamelCase(name);
     const infoLaptop = [
       "name",
       "price",
@@ -48,11 +49,13 @@ const ProductDetails = ({ param }: { param: string }) => {
       "color",
       "weight",
     ];
-    if (productInfo.current) {
+    if (productInfo.current && data) {
       if (infoLaptop.includes(name)) {
-        productInfo.current[name] = value;
+        productInfo.current[key as keyof typeof productInfo.current] = value;
       } else {
-        productInfo.current.configure[name] = value;
+        productInfo.current.configure[
+          key as keyof typeof productInfo.current.configure
+        ] = value;
       }
     }
   };
@@ -60,14 +63,19 @@ const ProductDetails = ({ param }: { param: string }) => {
   const handleSubmit = () => {
     productInfo.current.instock = stocking;
     // add properties if it hadn't edited yet
-    if ( !productInfo.current.name && data?.data.name) 
-      productInfo.current.name = data.data.name
-    if ( !productInfo.current.price && data?.data.price) 
-      productInfo.current.price = data.data.price
-    if ( !productInfo.current.img && data?.data.img)
-      productInfo.current.img = data.data.img 
+    if (!productInfo.current.name && data?.data.name)
+      productInfo.current.name = data.data.name;
+    if (!productInfo.current.price && data?.data.price)
+      productInfo.current.price = data.data.price;
+    if (!productInfo.current.img && data?.data.img)
+      productInfo.current.img = data.data.img;
 
     uploadEditedProduct.mutate(productInfo.current);
+  };
+
+  const handleEnableFeaturedProduct = (e: ChangeEvent<HTMLInputElement>) => {
+    setFeatured(e.target.checked);
+    productInfo.current.featured = e.target.checked;
   };
 
   useEffect(() => {
@@ -77,6 +85,12 @@ const ProductDetails = ({ param }: { param: string }) => {
       productInfo.current.configure = rest;
     }
   }, [isSuccess, data?.data.configure]);
+
+  useEffect(() => {
+    if (data) {
+      if (data.data.featured) setFeatured(data.data.featured);
+    }
+  }, [data]);
 
   if (isLoading) return <div>loading</div>;
 
@@ -100,14 +114,20 @@ const ProductDetails = ({ param }: { param: string }) => {
             onInputChange={handleChange}
             stocking={stocking}
             setStocking={setStocking}
+            handleEnableFeaturedProduct={handleEnableFeaturedProduct}
+            featured={featured}
           />
         </Stack>
         <Button
-          sx={{ float: "right", width: '132.5px' }}
+          sx={{ float: "right", width: "132.5px" }}
           variant="contained"
           onClick={handleSubmit}
         >
-          { uploadEditedProduct.isLoading ? <CircularProgress color="inherit" size={26} /> : 'edit product' }
+          {uploadEditedProduct.isLoading ? (
+            <CircularProgress color="inherit" size={26} />
+          ) : (
+            "edit product"
+          )}
         </Button>
       </Container>
     </Box>

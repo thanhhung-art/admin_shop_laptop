@@ -2,14 +2,14 @@
 import { Box, Button, CircularProgress, Container, Stack } from "@mui/material";
 import ShowImage from "@/components/products/product/selectImage";
 import AddDetails from "@/components/products/product/details";
-import { useRef, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import { IProduct } from "@/types/product";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Fetch } from "@/utils/fetch";
 
 const AddProduct = () => {
-  const queryClient = useQueryClient();
   const [stocking, setStocking] = useState("stocking");
+  const [featured, setFeatured] = useState(false);
   const productInfo = useRef<IProduct>({ configure: {}, price: 0 } as IProduct);
   const base64Image = useRef<string | ArrayBuffer | null>("");
   const [refresh, setRefresh] = useState(false);
@@ -33,7 +33,7 @@ const AddProduct = () => {
   };
 
   const handleChange = ({ name, value }: { name: string; value: string }) => {
-    name = spaceCaseToCamelCase(name);
+    const key = spaceCaseToCamelCase(name);
     if (productInfo.current) {
       const infoLaptop = [
         "name",
@@ -48,10 +48,10 @@ const AddProduct = () => {
         "weight",
       ];
 
-      if (infoLaptop.includes(name)) {
-        productInfo.current[name] = value;
+      if (infoLaptop.includes(key)) {
+        productInfo.current[key as keyof typeof productInfo.current] = value;
       } else {
-        productInfo.current.configure[name] = value;
+        productInfo.current.configure[key as keyof typeof productInfo.current.configure] = value;
       }
     }
   };
@@ -72,6 +72,10 @@ const AddProduct = () => {
     setRefresh(!refresh);
   };
 
+  const handleEnableFeaturedProduct = (e: ChangeEvent<HTMLInputElement>) => {
+    setFeatured(e.target.checked);
+  }
+
   return (
     <Box
       component="main"
@@ -88,6 +92,8 @@ const AddProduct = () => {
             stocking={stocking}
             setStocking={setStocking}
             refresh={refresh}
+            handleEnableFeaturedProduct={handleEnableFeaturedProduct}
+            featured={featured}
           />
         </Stack>
         <Box>

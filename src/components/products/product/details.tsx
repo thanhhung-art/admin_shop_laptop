@@ -1,6 +1,8 @@
 "use client";
 import { IProduct } from "@/types/product";
 import {
+  Checkbox,
+  FormControlLabel,
   Grid,
   TextField,
   ToggleButton,
@@ -22,7 +24,9 @@ interface IProps {
   onInputChange: ({ name, value }: { name: string; value: string }) => void;
   stocking: string;
   setStocking: Dispatch<SetStateAction<string>>;
+  handleEnableFeaturedProduct: (e: ChangeEvent<HTMLInputElement>) => void;
   refresh?: boolean;
+  featured: boolean;
 }
 
 const Details = ({
@@ -30,6 +34,8 @@ const Details = ({
   onInputChange,
   stocking,
   setStocking,
+  handleEnableFeaturedProduct,
+  featured,
   refresh,
 }: IProps) => {
   const refs = useMemo(() => new Map(), []);
@@ -74,25 +80,40 @@ const Details = ({
 
   return (
     <Grid container spacing={2} sx={{ flex: 1 }}>
-      {Array.from(refs).map(([key, ref]) => (
-        <Grid item key={key} xs={calcXsItem(key)}>
-          <TextField
-            inputRef={ref}
-            type={key === 'price' ? 'number' : 'text'}
-            onChange={handleChange}
-            name={key}
-            fullWidth
-            defaultValue={
-              data
-                ? data[spaceCaseToCamelCase(key)] ||
-                  data.configure[spaceCaseToCamelCase(key)]
-                : ""
-            }
-            label={key}
-            multiline
-          />
-        </Grid>
-      ))}
+      {Array.from(refs).map(([key, ref]) => {
+        return (
+          <Grid item key={key} xs={calcXsItem(key)}>
+            <TextField
+              inputRef={ref}
+              type={key === "price" ? "number" : "text"}
+              onChange={handleChange}
+              name={key}
+              fullWidth
+              defaultValue={
+                data
+                  ? data[spaceCaseToCamelCase(key) as keyof typeof data] ||
+                    data.configure[
+                      spaceCaseToCamelCase(key) as keyof typeof data.configure
+                    ]
+                  : ""
+              }
+              label={key}
+              multiline
+            />
+          </Grid>
+        );
+      })}
+      <Grid item xs={12}>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={featured}
+              onChange={handleEnableFeaturedProduct}
+            />
+          }
+          label="Featured"
+        />
+      </Grid>
       <Grid item xs={12}>
         <ToggleButtonGroup value={stocking} onChange={handleStocking} exclusive>
           <ToggleButton value="stocking">stocking</ToggleButton>
