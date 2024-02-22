@@ -1,5 +1,5 @@
 "use client";
-import { IGetProducts, IGetProductsInfinity, IProduct } from "@/types/product";
+import { IGetProductsInfinity, IProduct } from "@/types/product";
 import {
   Box,
   Button,
@@ -14,12 +14,12 @@ import Link from "next/link";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getProductsInfinity } from "@/utils/fetch";
 import IconStar from "@heroicons/react/24/outline/StarIcon";
-import IconStarSolid from "@heroicons/react/24/solid/StarIcon";
+import { GetProductsInfinity } from "@/utils/keys";
 
 const ListProducts = () => {
   const { data, isLoading, isError, fetchNextPage, hasNextPage } =
     useInfiniteQuery<IGetProductsInfinity>(
-      ["getProductsInfinity"],
+      [GetProductsInfinity],
       ({ pageParam = 0 }) => getProductsInfinity(pageParam),
       {
         getNextPageParam: (lastPage, allPage) => {

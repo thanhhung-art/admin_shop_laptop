@@ -6,6 +6,7 @@ import { Fetch, getProduct } from "@/utils/fetch";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { IGetProduct, IProduct } from "@/types/product";
 import { ChangeEvent, useEffect, useRef, useState } from "react";
+import { GetProduct } from "@/utils/keys";
 
 const ProductDetails = ({ param }: { param: string }) => {
   const queryClient = useQueryClient();
@@ -15,7 +16,7 @@ const ProductDetails = ({ param }: { param: string }) => {
   const base64Image = useRef<string | ArrayBuffer | null>("");
 
   const { data, isLoading, isError, isSuccess } = useQuery<IGetProduct>(
-    ["getProduct"],
+    [GetProduct, param],
     () => getProduct(param)
   );
 

@@ -7,6 +7,7 @@ import OverviewTotalCustomers from "@/components/overviews/OverviewTotalCustomer
 import OverviewTotalProfit from "@/components/overviews/OverviewTotalProfit";
 import { Box, Container, Grid } from "@mui/material";
 import Head from "next/head";
+import { Suspense } from "react";
 
 export default function Home() {
   return (
@@ -41,23 +42,29 @@ export default function Home() {
               />
             </Grid>
             <Grid item xs={12} sm={6} lg={3}>
-              <OverviewTasksProgress sx={{ height: "100%" }} value={75.5} />
+              <Suspense>
+                <OverviewTasksProgress sx={{ height: "100%" }} value={75.5} />
+              </Suspense>
             </Grid>
             <Grid item xs={12} sm={6} lg={3}>
-              <OverviewTotalProfit sx={{ height: "100%" }} value={75.5} />
+              <Suspense>
+                <OverviewTotalProfit sx={{ height: "100%" }} value={75.5} />
+              </Suspense>
             </Grid>
             <Grid item xs={12}>
-              <OverviewSales sx={{ height: "100%" }} data={{}} />
+              <Suspense>
+                <OverviewSales sx={{ height: "100%" }} data={{}} />
+              </Suspense>
             </Grid>
             <Grid item xs={12} md={6} lg={4}>
-              <OverViewLatestProducts
-                sx={{ height: "100%" }}
-              />
+              <Suspense>
+                <OverViewLatestProducts sx={{ height: "100%" }} />
+              </Suspense>
             </Grid>
             <Grid item xs={12} md={12} lg={8}>
-              <OverviewLatestOrders 
-                sx={{ height: "100%" }}
-              />
+              <Suspense>
+                <OverviewLatestOrders sx={{ height: "100%" }} />
+              </Suspense>
             </Grid>
           </Grid>
         </Container>

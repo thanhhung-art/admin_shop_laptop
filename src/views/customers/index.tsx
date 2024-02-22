@@ -2,17 +2,18 @@
 import SearchInput from "@/components/customers/SearchInput";
 import TableCustomers from "@/components/customers/Table";
 import { getUsers } from "@/utils/fetch";
+import { GetCustomers } from "@/utils/keys";
 import { ArrowDownOnSquareIcon, ArrowUpOnSquareIcon, PlusIcon } from "@heroicons/react/20/solid";
 import { Box, Button, Container, Stack, SvgIcon, Typography } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 import Head from "next/head";
 
 const Customers = () => {
-  const { data } = useQuery(["customers"], getUsers)
+  const { data, isLoading, isError } = useQuery([GetCustomers], getUsers)
 
-  console.log(data);
+  if (isLoading) return <div>loading</div>
 
-  if (!data) return <div>loading</div>
+  if (isError) return <div>error</div>
 
   return (
     <>
@@ -79,27 +80,8 @@ const Customers = () => {
                 </Button>
               </div>
             </Stack>
-
             <SearchInput />
-
             <TableCustomers data={data.data} />
-
-            {
-              /* <CustomersSearch />
-            <CustomersTable
-              count={data.length}
-              items={customers}
-              onDeselectAll={customersSelection.handleDeselectAll}
-              onDeselectOne={customersSelection.handleDeselectOne}
-              onPageChange={handlePageChange}
-              onRowsPerPageChange={handleRowsPerPageChange}
-              onSelectAll={customersSelection.handleSelectAll}
-              onSelectOne={customersSelection.handleSelectOne}
-              page={page}
-              rowsPerPage={rowsPerPage}
-              selected={customersSelection.selected}
-            /> */
-            }
           </Stack>
         </Container>
       </Box>

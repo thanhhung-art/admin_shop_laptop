@@ -5,11 +5,12 @@ import { queryClient } from "@/lib/react_query/queryClient";
 import { dehydrate } from "@tanstack/react-query";
 import { getProductsInfinity } from "@/utils/fetch";
 import { ReactQueryHydrate } from "@/lib/react_query/reactQueryHydrate";
+import { GetProductsInfinity } from "@/utils/keys";
 
 const page = async () => {
   const queryClientLocal = queryClient();
   await queryClientLocal.prefetchInfiniteQuery(
-    ["getProductsInfinity"],
+    [GetProductsInfinity],
     ({ pageParam = 0 }) => getProductsInfinity(pageParam)
   );
   const dehydratedState = dehydrate(queryClientLocal);

@@ -16,9 +16,10 @@ import CloseIcon from "@heroicons/react/24/solid/XMarkIcon";
 import { IOrder, IOrderUpdate } from "@/types/order";
 import Details from "@/components/orders/Details";
 import ListProducts from "@/components/orders/ListProducts";
+import { GetOrders } from "@/utils/keys";
 
 const Orders = () => {
-  const { data, isLoading } = useQuery(["getOrders"], () => getOrders());
+  const { data, isLoading } = useQuery([GetOrders], () => getOrders('all'));
   const [open, setOpen] = useState(false);
   const [currOrderId, setCurrOrderId] = useState("");
 
