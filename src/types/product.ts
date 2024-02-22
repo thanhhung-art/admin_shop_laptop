@@ -11,8 +11,10 @@ export interface IProduct {
   brand: string;
   weight: string;
   updatedAt: string;
+  featured?: boolean;
 
   configure: {
+    _id?: string;
     ram: string;
     hardDisk: string;
     cpu: string;
