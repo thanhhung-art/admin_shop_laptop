@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
+'use client'
+import { useEffect, useState } from 'react'
 
 function useLocation() {
   const [pathname, setPathname] = useState("")
@@ -7,7 +8,7 @@ function useLocation() {
     if (window) setPathname(window.location.pathname)
   }, [])
 
-  return { pathname: pathname }
+  return { pathname }
 }
 
 export default useLocation
