@@ -1,16 +1,10 @@
 "use client";
-import { Box, Drawer, Stack, SvgIcon, Typography } from "@mui/material";
+import { Box, Drawer, Stack, SvgIcon } from "@mui/material";
 import { Logo } from "@/icons/LogoIcon";
 import Link from "next/link";
 import { items } from "./config";
 import { SideNavItem } from "./sideNavItem";
 import useLocation from "@/hooks/useLocation";
-import { useEffect } from "react";
-
-interface IProps {
-  onClose: () => void;
-  open: boolean;
-}
 
 const SideNav = () => {
   const { pathname } = useLocation()

@@ -1,5 +1,4 @@
 "use client";
-import SearchIcon from "@/icons/SearchIcon";
 import {
   Avatar,
   Badge,
@@ -7,7 +6,6 @@ import {
   IconButton,
   Stack,
   SvgIcon,
-  Theme,
   Tooltip,
   alpha,
 } from "@mui/material";
@@ -17,10 +15,6 @@ import UsersIcon from "@heroicons/react/24/solid/UsersIcon";
 import Bars3Icon from "@heroicons/react/24/solid/Bars3Icon";
 import MagnifyingGlassIcon from "@heroicons/react/24/solid/MagnifyingGlassIcon";
 import useMobile from "@/hooks/isMobile";
-
-interface IProps {
-  onNavOpen: () => void;
-}
 
 const TopNav = () => {
   const { isMobile } = useMobile();
@@ -43,7 +37,7 @@ const TopNav = () => {
           lg: `calc(100% - ${280}px)`,
         },
         zIndex: (theme) => theme.zIndex.drawer + 1,
-        borderBottom: '1px solid rgba(0,0,0,0.12)',
+        borderBottom: "1px solid rgba(0,0,0,0.12)",
       }}
     >
       <Stack
@@ -90,9 +84,9 @@ const TopNav = () => {
           </Tooltip>
           <Avatar
             sx={{
-              cursor: 'pointer',
+              cursor: "pointer",
               height: 40,
-              width: 40
+              width: 40,
             }}
           />
         </Stack>
