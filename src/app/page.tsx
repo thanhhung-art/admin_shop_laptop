@@ -11,7 +11,7 @@ export default async function page() {
     [GetProductsInfinity],
     ({ pageParam = 0 }) => getProductsInfinity(pageParam)
   );
-  await queryClientLocal.prefetchQuery([GetOrders], () => getOrders('latest'))
+  await queryClientLocal.prefetchQuery([GetOrders], () => getOrders('all'))
   const dehydratedState = dehydrate(queryClientLocal);
 
   return (
