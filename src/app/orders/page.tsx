@@ -8,7 +8,7 @@ import { dehydrate } from "@tanstack/react-query";
 const page = async () => {
   const queryClientLocal = queryClient();
   await queryClientLocal.prefetchQuery([GetOrders], () =>
-    getOrders()
+    getOrders('all')
   );
   const dehydratedState = dehydrate(queryClientLocal);
 
