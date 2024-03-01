@@ -1,5 +1,6 @@
 "use client";
 import { ICustomer } from "@/types/customer";
+import { convertTime } from "@/utils/convertTime";
 import { getUsers } from "@/utils/fetch";
 import {
   Box,
@@ -9,7 +10,6 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableFooter,
   TableHead,
   TablePagination,
   TableRow,
@@ -68,8 +68,7 @@ const headCells: readonly HeadCell[] = [
 ];
 
 const TableCustomers = ({ data }: IProps) => {
-  const customers = useQuery(['customers'], getUsers )
-  console.log(customers.data);
+  const customers = useQuery(['getCustomers'], getUsers )
 
   return (
     <Card>
@@ -128,7 +127,7 @@ const TableCustomers = ({ data }: IProps) => {
                   <TableCell align="left">{row.email}</TableCell>
                   <TableCell align="left">{row.address || 'unknow'}</TableCell>
                   <TableCell align="left">{row.phone || 'unknow'}</TableCell>
-                  <TableCell align="left">{row.createdAt + ""}</TableCell>
+                  <TableCell align="left">{convertTime(row.createdAt)}</TableCell>
                 </TableRow>
               );
             })}
