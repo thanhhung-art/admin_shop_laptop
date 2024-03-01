@@ -7,6 +7,7 @@ import {
   Card,
   CardActions,
   CardHeader,
+  CircularProgress,
   Divider,
   SvgIcon,
   Table,
@@ -28,12 +29,11 @@ export const OverviewLatestOrders = ({ sx }: IProps) => {
   );
   const router = useRouter();
 
-  if (isLoading) return <div>loading</div>;
+  if (isLoading) return <div><CircularProgress /></div>;
 
   return (
     <Card sx={sx}>
       <CardHeader title="Latest Orders" />
-
       <Box sx={{ minWidth: 800 }}>
         <Table>
           <TableHead>

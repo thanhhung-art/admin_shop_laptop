@@ -30,14 +30,42 @@ export const getProduct = async (id: string) => {
   return res.data as IGetProduct;
 };
 
+export const getAmountProducts = async () => {
+  const res = await Fetch("/products/amount");
+  return res.data as { msg: string; data: number };
+};
+
 export const getUsers = async () => {
   const res = await Fetch("/users");
   return res.data as IGetUsers;
 };
 
-export const getOrders = async (query?: string) => {
-  const res = await Fetch(`/orders?${query ? "query=" + query : ""}`);
+export const getOrders = async (query: string) => {
+  const res = await Fetch(`/orders?query=${query}`);
   return res.data as IGetOrders;
+};
+
+export const getAmountOrders = async () => {
+  const res = await Fetch("orders/amount");
+  return res.data as { msg: string; data: number };
+};
+
+export const getAmountOrdersPending = async () => {
+  const res = await Fetch(`orders/amount?status=pending`);
+  return res.data as { msg: string; data: number };
+};
+
+export const getRevenue = async () => {
+  const res = await Fetch("orders/revenue");
+  return res.data as { msg: string; data: number };
+};
+
+export const getSales = async (year: number) => {
+  const res = await Fetch(`orders/sales_by_months/${year}`);
+  return res.data as {
+    msg: string;
+    data: {_id: { month: number }, totalSales: number}[];
+  };
 };
 
 export const updateOrder = async (id: string, data: IOrderUpdate<IOrder>) => {
