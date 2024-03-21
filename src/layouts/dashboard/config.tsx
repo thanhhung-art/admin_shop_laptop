@@ -4,6 +4,7 @@ import ShoppingBagIcon from "@heroicons/react/24/solid/ShoppingBagIcon";
 import UserIcon from "@heroicons/react/24/solid/UserIcon";
 import UserPlusIcon from "@heroicons/react/24/solid/UserPlusIcon";
 import UsersIcon from "@heroicons/react/24/solid/UsersIcon";
+import PencilIcon from "@heroicons/react/24/solid/esm/PencilIcon";
 import { SvgIcon } from "@mui/material";
 import { ReactNode } from "react";
 
@@ -49,6 +50,15 @@ export const items: IItems[] = [
     icon: (
       <SvgIcon fontSize="small">
         <LockClosedIcon />
+      </SvgIcon>
+    )
+  },
+  {
+    title: "reviews",
+    path: "/reviews",
+    icon: (
+      <SvgIcon fontSize="small">
+        <PencilIcon />
       </SvgIcon>
     )
   },
