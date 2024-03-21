@@ -5,15 +5,14 @@ import {
   Button,
   Card,
   Grid,
+  Rating,
   Stack,
-  SvgIcon,
   Typography,
 } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getProductsInfinity } from "@/utils/fetch";
-import IconStar from "@heroicons/react/24/outline/StarIcon";
 import { GetProductsInfinity } from "@/utils/keys";
 
 const ListProducts = () => {
@@ -70,11 +69,7 @@ const ListProducts = () => {
                   sx={{ display: "flex", justifyContent: "center", my: 0.5 }}
                 >
                   <Box>
-                    {[1, 2, 3, 4, 5].map((e) => (
-                      <SvgIcon key={e} fontSize="small">
-                        <IconStar />
-                      </SvgIcon>
-                    ))}
+                    <Rating value={5} readOnly />
                   </Box>
                 </Box>
                 <Typography
