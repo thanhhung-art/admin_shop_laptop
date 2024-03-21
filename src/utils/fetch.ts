@@ -5,6 +5,7 @@ import {
   IGetProducts,
   IGetProductsInfinity,
 } from "@/types/product";
+import { IReview } from "@/types/reviews";
 import axios from "axios";
 
 export const Fetch = axios.create({
@@ -64,11 +65,25 @@ export const getSales = async (year: number) => {
   const res = await Fetch(`orders/sales_by_months/${year}`);
   return res.data as {
     msg: string;
-    data: {_id: { month: number }, totalSales: number}[];
+    data: { _id: { month: number }; totalSales: number }[];
   };
 };
 
 export const updateOrder = async (id: string, data: IOrderUpdate<IOrder>) => {
   const res = await Fetch.put("/orders/" + id, data);
   return res.data as IGetOrder;
+};
+
+export const getReviews = async (
+  value: "has been checked" | "has not been checked"
+) => {
+  const res = await Fetch(
+    "/reviews" + "?checked=" + (value === "has been checked" ? true : false)
+  );
+  return res.data as { msg: string; data: IReview[] };
+};
+
+export const getReviewsInfinity = async (page: number) => {
+  const res = await Fetch(`/reviews?checked=false&page=${page}`);
+  return res.data as { msg: string; data: { lastPage: number; nextPage: number; reviews: IReview[]}}
 };
