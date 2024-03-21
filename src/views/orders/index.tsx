@@ -22,7 +22,6 @@ const Orders = () => {
   const { data, isLoading } = useQuery([GetOrders], () => getOrders('all'));
   const [open, setOpen] = useState(false);
   const [currOrderId, setCurrOrderId] = useState("");
-  console.log(data);
 
   const updateOrderMutation = useMutation((data: IOrderUpdate<IOrder>) => {
     return updateOrder(currOrderId, data)
