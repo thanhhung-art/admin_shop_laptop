@@ -19,43 +19,51 @@ import ListProducts from "@/components/orders/ListProducts";
 import { GetOrders } from "@/utils/keys";
 
 const Orders = () => {
-  const { data, isLoading } = useQuery([GetOrders], () => getOrders('all'));
+  const { data, isLoading } = useQuery([GetOrders], () => getOrders("all"));
+  const orderSorted = useMemo(() => {
+    return data?.data.sort((a, b) => {
+      const dateA = Date.parse(a.createdAt)
+      const dateB = Date.parse(b.createdAt)
+
+      return dateA - dateB;
+    });
+  }, [data]);
   const [open, setOpen] = useState(false);
   const [currOrderId, setCurrOrderId] = useState("");
+  const updateOrderStatusMutation = useMutation((dataToUPdate: IOrderUpdate<IOrder>) => {
+    return updateOrder(currOrderId, dataToUPdate);
+  });
 
-  const updateOrderMutation = useMutation((data: IOrderUpdate<IOrder>) => {
-    return updateOrder(currOrderId, data)
-  })
-
-  const currOrder: IOrder | null = useMemo(() => {
-    if (data?.data) {
-      const indexOrder = data.data.findIndex((order: IOrder) => order._id === currOrderId);
-      return data.data[indexOrder]
+  const currOrder: IOrder | undefined = useMemo(() => {
+    if (orderSorted) {
+      const order = orderSorted.find(
+        (order: IOrder) => order._id === currOrderId
+      );
+      return order;
     }
-    return null
-  }, [data, currOrderId]);
+    return undefined;
+  }, [orderSorted, currOrderId]);
 
   const handleCloseDrawer = () => setOpen(false);
   const handleToggleDrawer = (thisOrderId: string) => {
     if (open && thisOrderId === currOrderId) {
       setOpen(false);
-      return
+      return;
     }
-    setOpen(true)
+    setOpen(true);
   };
 
   const handleApproveOrder = () => {
-    updateOrderMutation.mutate({ status: 'shipped' });
-  }
+    updateOrderStatusMutation.mutate({ status: "shipped" });
+  };
 
   const handleRejectOrder = () => {
-    updateOrderMutation.mutate({ status: 'cancelled'});
-  }
+    updateOrderStatusMutation.mutate({ status: "cancelled" });
+  };
 
-  if (isLoading) return <div>loading</div>
 
-  if (!data) return <div>loading</div>;
-  
+  if (!orderSorted || isLoading) return <div>loading</div>;
+
   return (
     <Box
       component="main"
@@ -69,7 +77,7 @@ const Orders = () => {
           Orders
         </Typography>
         <EnhancedTable
-          orders={data.data}
+          orders={orderSorted}
           handleToggleDrawer={handleToggleDrawer}
           setCurrOrderId={setCurrOrderId}
         />
@@ -117,10 +125,26 @@ const Orders = () => {
           )}
 
           <Stack direction="row" justifyContent="flex-end">
-            <Button onClick={handleApproveOrder} color="primary" variant="contained" sx={{ mr: 2, borderRadius: 10 }}>Approve</Button>
-            <Button onClick={handleRejectOrder} color="secondary" variant="outlined" sx={{ borderRadius: 10 }}>Reject</Button>
+            <Button
+              onClick={handleApproveOrder}
+              color="primary"
+              variant="contained"
+              sx={{ mr: 2, borderRadius: 10 }}
+            >
+              Approve
+            </Button>
+            <Button
+              onClick={handleRejectOrder}
+              color="secondary"
+              variant="outlined"
+              sx={{ borderRadius: 10 }}
+            >
+              Reject
+            </Button>
           </Stack>
-          { open && currOrderId && currOrder !== null && <ListProducts products={currOrder.products} />}
+          {open && currOrderId && currOrder !== null && (
+            <ListProducts products={currOrder ? currOrder.products : []} />
+          )}
         </Box>
       </Drawer>
     </Box>

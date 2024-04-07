@@ -14,7 +14,7 @@ import { useMemo } from "react";
 import Image from "next/image";
 
 interface IProps {
-  products: {
+  products?: {
     _id: string;
     productId: string;
     quantity: number;
@@ -23,6 +23,7 @@ interface IProps {
 
 const ListProducts = ({ products }: IProps) => {
   const promises = useMemo(() => {
+    if (!products) return [];
     return products.map((p) => ({
       queryKey: ["getProduct", p._id],
       queryFn: () => getProduct(p.productId),
@@ -32,20 +33,19 @@ const ListProducts = ({ products }: IProps) => {
     queries: promises,
   });
 
-  const productsInOrder = useMemo(
-    () =>
-      data.map((p) => {
-        if (!p.data) return null
-        const quantity =
-          products[
-            products.findIndex(
-              (product) => product.productId === p.data?.data._id
-            )
-          ].quantity;
-        return { ...p.data.data, quantity };
-      }),
-    [data, products]
-  );
+  const productsInOrder = useMemo(() => {
+    if (!products) return [];
+    return data.map((p) => {
+      if (!p.data) return undefined;
+      const quantity =
+        products[
+          products.findIndex(
+            (product) => product.productId === p.data?.data._id
+          )
+        ].quantity;
+      return { ...p.data.data, quantity };
+    });
+  }, [data, products]);
 
   return (
     <Box sx={{ mt: 2 }}>
@@ -55,7 +55,7 @@ const ListProducts = ({ products }: IProps) => {
       <List>
         {productsInOrder.map((p, i) => (
           <ListItem key={p?._id || i}>
-            <Card sx={{ p: 1, width: '100%' }}>
+            <Card sx={{ p: 1, width: "100%" }}>
               <Stack direction="row" sx={{ gap: 1 }}>
                 <Box>
                   <Box sx={{ position: "relative", height: 40, width: 80 }}>
