@@ -1,4 +1,4 @@
-import AddProduct from "@/views/products/addProduct";
+import AddProduct from "@/views/product/addProduct";
 
 const page = () => {
   return <AddProduct />

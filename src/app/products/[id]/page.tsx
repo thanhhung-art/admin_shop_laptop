@@ -2,7 +2,7 @@ import { queryClient } from "@/lib/react_query/queryClient";
 import { ReactQueryHydrate } from "@/lib/react_query/reactQueryHydrate";
 import { getProduct } from "@/utils/fetch";
 import { GetProduct } from "@/utils/keys";
-import ProductDetails from "@/views/products/productDetails";
+import ProductDetails from "@/views/product/productDetails";
 import { dehydrate } from "@tanstack/react-query";
 
 const page = async ({ params }: { params: { id: string } }) => {

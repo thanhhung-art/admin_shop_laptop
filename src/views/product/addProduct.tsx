@@ -2,20 +2,19 @@
 import { Box, Button, CircularProgress, Container, Stack } from "@mui/material";
 import ShowImage from "@/components/products/product/selectImage";
 import AddDetails from "@/components/products/product/details";
-import { ChangeEvent, useRef, useState } from "react";
-import { IProduct } from "@/types/product";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRef, useState } from "react";
+import { IProduct, IUpdateProduct } from "@/types/product";
+import { useMutation } from "@tanstack/react-query";
 import { Fetch } from "@/utils/fetch";
+import { configure } from "@/utils/global";
 
 const AddProduct = () => {
-  const [stocking, setStocking] = useState("stocking");
-  const [featured, setFeatured] = useState(false);
-  const productInfo = useRef<IProduct>({ configure: {}, price: 0 } as IProduct);
+  const productInfo = useRef<IUpdateProduct>({} as IUpdateProduct);
   const base64Image = useRef<string | ArrayBuffer | null>("");
   const [refresh, setRefresh] = useState(false);
 
   const addProductMutation = useMutation(
-    (data: IProduct) => {
+    (data: IUpdateProduct) => {
       return Fetch.post("/products", data);
     },
     {
@@ -32,33 +31,23 @@ const AddProduct = () => {
     return text;
   };
 
-  const handleChange = ({ name, value }: { name: string; value: string }) => {
+  const handleChange = (name: string, value: string | string[] | boolean) => {
     const key = spaceCaseToCamelCase(name);
     if (productInfo.current) {
-      const infoLaptop = [
-        "name",
-        "price",
-        "brand",
-        "description",
-        "instock",
-        "img",
-        "categories",
-        "rating",
-        "color",
-        "weight",
-      ];
-
-      if (infoLaptop.includes(key)) {
-        productInfo.current[key as keyof typeof productInfo.current] = value;
+      if (configure.includes(key)) {
+        if (productInfo.current.configure) {
+          productInfo.current.configure[key] = value;
+        } else {
+          productInfo.current.configure = { key: value };
+        }
       } else {
-        productInfo.current.configure[key as keyof typeof productInfo.current.configure] = value;
+        productInfo.current[key] = value
       }
     }
   };
 
   const handleSubmit = () => {
     productInfo.current.price = Number(productInfo.current.price);
-    productInfo.current.instock = stocking;
     productInfo.current.rating = 0;
 
     if (typeof base64Image.current === "string")
@@ -72,10 +61,6 @@ const AddProduct = () => {
     setRefresh(!refresh);
   };
 
-  const handleEnableFeaturedProduct = (e: ChangeEvent<HTMLInputElement>) => {
-    setFeatured(e.target.checked);
-  }
-
   return (
     <Box
       component="main"
@@ -86,15 +71,8 @@ const AddProduct = () => {
     >
       <Container maxWidth="xl">
         <Stack direction="row" spacing={2}>
-          <ShowImage base64Img={base64Image} refresh={refresh}/>
-          <AddDetails
-            onInputChange={handleChange}
-            stocking={stocking}
-            setStocking={setStocking}
-            refresh={refresh}
-            handleEnableFeaturedProduct={handleEnableFeaturedProduct}
-            featured={featured}
-          />
+          <ShowImage base64Img={base64Image} refresh={refresh} />
+          <AddDetails onInputChange={handleChange} refresh={refresh} />
         </Stack>
         <Box>
           <Stack direction="row" justifyContent="left" spacing={2}>
