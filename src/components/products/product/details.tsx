@@ -1,79 +1,65 @@
 "use client";
+
 import { IProduct } from "@/types/product";
-import {
-  Checkbox,
-  FormControlLabel,
-  Grid,
-  TextField,
-  ToggleButton,
-  ToggleButtonGroup,
-} from "@mui/material";
-import {
-  MouseEvent,
-  ChangeEvent,
-  Dispatch,
-  SetStateAction,
-  useEffect,
-  createRef,
-  useMemo,
-} from "react";
+import { FormGroup, Grid, TextField } from "@mui/material";
+import { ChangeEvent, useEffect, createRef, useMemo, RefObject } from "react";
 import { calcXsItem } from "@/utils/calcXsItems";
+import Categories from "./categories";
+import FeaturedCheckBox from "./FeaturedCheckBox";
+import InstockCheckbox from "./InstockCheckbox";
+import Color from "./addColor";
+import { TOnInputChange } from "@/views/product/productDetails";
 
 interface IProps {
   data?: IProduct;
-  onInputChange: ({ name, value }: { name: string; value: string }) => void;
-  stocking: string;
-  setStocking: Dispatch<SetStateAction<string>>;
-  handleEnableFeaturedProduct: (e: ChangeEvent<HTMLInputElement>) => void;
+  onInputChange: TOnInputChange
   refresh?: boolean;
-  featured: boolean;
 }
 
-const Details = ({
-  data,
-  onInputChange,
-  stocking,
-  setStocking,
-  handleEnableFeaturedProduct,
-  featured,
-  refresh,
-}: IProps) => {
-  const refs = useMemo(() => new Map(), []);
-  refs.set("name", createRef<HTMLInputElement>());
-  refs.set("price", createRef<HTMLInputElement>());
-  refs.set("brand", createRef<HTMLInputElement>());
-  refs.set("operating system", createRef<HTMLInputElement>());
-  refs.set("ram", createRef<HTMLInputElement>());
-  refs.set("hard disk", createRef<HTMLInputElement>());
-  refs.set("screen", createRef<HTMLInputElement>());
-  refs.set("cpu", createRef<HTMLInputElement>());
-  refs.set("gpu", createRef<HTMLInputElement>());
-  refs.set("battery", createRef<HTMLInputElement>());
-  refs.set("camera", createRef<HTMLInputElement>());
-  refs.set("color", createRef<HTMLInputElement>());
-  refs.set("weight", createRef<HTMLInputElement>());
-  refs.set("categories", createRef<HTMLInputElement>());
-  refs.set("description", createRef<HTMLInputElement>());
+const fields = [
+  "name",
+  "price",
+  "brand",
+  "operating system",
+  "ram",
+  "hard disk",
+  "screen",
+  "cpu",
+  "gpu",
+  "battery",
+  "camera",
+  "weight",
+  "description",
+  "categories",
+  "color",
+];
 
-  const handleStocking = (e: MouseEvent<HTMLElement>, isStocking: string) => {
-    setStocking(isStocking);
+function spaceCaseToCamelCase(text: string) {
+  if (text === "operating system") return "os";
+  if (text === "hard disk") return "hardDisk";
+  return text;
+}
+
+const Details = ({ data, onInputChange, refresh }: IProps) => {
+  const refs = useMemo(
+    () =>
+      new Map<string, RefObject<HTMLInputElement>>(
+        fields.map((field) => [field, createRef<HTMLInputElement>()])
+      ),
+    []
+  );
+
+  const handleInputValueChange = (e: ChangeEvent<HTMLInputElement>) => {
+    let name: string = spaceCaseToCamelCase(e.target.name);
+    let value: string | string[] | boolean = e.target.value;
+
+    onInputChange(name, value);
   };
-
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { value, name } = e.target;
-    onInputChange({ name, value });
-  };
-
-  function spaceCaseToCamelCase(text: string) {
-    if (text === "operating system") return "os";
-    if (text === "hard disk") return "hardDisk";
-    return text;
-  }
 
   useEffect(() => {
     if (refresh) {
-      refs.forEach((value, key) => {
-        value.current.value = "";
+      refs.forEach((value) => {
+        if (value.current) value.current.value = "";
       });
     }
   }, [refresh, refs]);
@@ -83,42 +69,49 @@ const Details = ({
       {Array.from(refs).map(([key, ref]) => {
         return (
           <Grid item key={key} xs={calcXsItem(key)}>
-            <TextField
-              inputRef={ref}
-              type={key === "price" ? "number" : "text"}
-              onChange={handleChange}
-              name={key}
-              fullWidth
-              defaultValue={
-                data
-                  ? data[spaceCaseToCamelCase(key) as keyof typeof data] ||
-                    data.configure[
-                      spaceCaseToCamelCase(key) as keyof typeof data.configure
-                    ]
-                  : ""
+            {(() => {
+              switch (key) {
+                case "categories":
+                  return (
+                    <Categories data={data} onInputChange={onInputChange} />
+                  );
+                case "color":
+                  return <Color colorsProp={data?.colors} onInputChange={onInputChange} />;
+                case "price":
+                default:
+                  return (
+                    <TextField
+                      inputRef={ref}
+                      type={key === "price" ? "number" : "text"}
+                      onChange={handleInputValueChange}
+                      name={key}
+                      fullWidth
+                      defaultValue={
+                        data
+                          ? data[
+                              spaceCaseToCamelCase(key) as keyof typeof data
+                            ] ||
+                            data.configure[
+                              spaceCaseToCamelCase(
+                                key
+                              ) as keyof typeof data.configure
+                            ]
+                          : ""
+                      }
+                      label={key}
+                      multiline
+                    />
+                  );
               }
-              label={key}
-              multiline
-            />
+            })()}
           </Grid>
         );
       })}
       <Grid item xs={12}>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={featured}
-              onChange={handleEnableFeaturedProduct}
-            />
-          }
-          label="Featured"
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <ToggleButtonGroup value={stocking} onChange={handleStocking} exclusive>
-          <ToggleButton value="stocking">stocking</ToggleButton>
-          <ToggleButton value="out of stock">out of stock</ToggleButton>
-        </ToggleButtonGroup>
+        <FormGroup>
+          <FeaturedCheckBox data={data} onInputChange={onInputChange} />
+          <InstockCheckbox data={data} onInputChange={onInputChange} />
+        </FormGroup>
       </Grid>
     </Grid>
   );

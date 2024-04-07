@@ -3,15 +3,16 @@ export interface IProduct {
   name: string;
   price: number;
   descriptions: string;
-  instock: string;
+  instock: boolean;
   img: string;
-  categories: string;
+  categories: string[];
   rating?: number;
-  color: string | string[];
+  colors: { color: string, quantity: number }[];
   brand: string;
   weight: string;
   updatedAt: string;
   featured?: boolean;
+  [key: string]: any;
 
   configure: {
     _id?: string;
@@ -23,6 +24,15 @@ export interface IProduct {
     battery: string;
     os: string;
     gpu: string;
+    [key: string]: any;
+  };
+}
+
+export interface IUpdateProduct {
+  [key: string]: any;
+
+  configure?: {
+    [key: string]: any;
   };
 }
 

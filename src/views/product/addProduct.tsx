@@ -6,7 +6,7 @@ import { useRef, useState } from "react";
 import { IProduct, IUpdateProduct } from "@/types/product";
 import { useMutation } from "@tanstack/react-query";
 import { Fetch } from "@/utils/fetch";
-import { configure } from "@/utils/global";
+import { configure, spaceCaseToCamelCase } from "@/utils/global";
 
 const AddProduct = () => {
   const productInfo = useRef<IUpdateProduct>({} as IUpdateProduct);
@@ -24,14 +24,10 @@ const AddProduct = () => {
     }
   );
 
-  const spaceCaseToCamelCase = (text: string) => {
-    if (text === "operating system") return "os";
-    if (text === "hard disk") return "hardDisk";
-
-    return text;
-  };
-
-  const handleChange = (name: string, value: string | string[] | boolean) => {
+  const handleChange = (
+    name: string,
+    value: string | string[] | { color: string; quantity: number }[] | boolean
+  ) => {
     const key = spaceCaseToCamelCase(name);
     if (productInfo.current) {
       if (configure.includes(key)) {
@@ -41,7 +37,7 @@ const AddProduct = () => {
           productInfo.current.configure = { key: value };
         }
       } else {
-        productInfo.current[key] = value
+        productInfo.current[key] = value;
       }
     }
   };

@@ -22,7 +22,7 @@ export const getProducts = async (query: string) => {
 };
 
 export const getProductsInfinity = async (page: number) => {
-  const res = await Fetch(`/products?query=${page}`);
+  const res = await Fetch(`/products?page=${page}`);
   return res.data as IGetProductsInfinity;
 };
 
