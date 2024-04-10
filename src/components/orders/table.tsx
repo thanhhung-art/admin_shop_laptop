@@ -6,6 +6,7 @@ import {
   useMemo,
   Dispatch,
   SetStateAction,
+  useCallback,
 } from "react";
 import { alpha } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -105,10 +106,14 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     rowCount,
     onRequestSort,
   } = props;
-  const createSortHandler =
-    (property: keyof IOrder) => (event: MouseEvent<unknown>) => {
-      onRequestSort(event, property);
-    };
+  const createSortHandler = useCallback(
+    (property: keyof IOrder) => {
+      return (event: MouseEvent<unknown>) => {
+        onRequestSort(event, property);
+      };
+    },
+    [onRequestSort]
+  );
 
   return (
     <TableHead>
@@ -120,14 +125,14 @@ function EnhancedTableHead(props: EnhancedTableProps) {
             checked={rowCount > 0 && numSelected === rowCount}
             onChange={onSelectAllClick}
             inputProps={{
-              "aria-label": "select all desserts",
+              "aria-label": "select all orders",
             }}
           />
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? "right" : "left"}
+            align={"center"}
             padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
@@ -215,7 +220,7 @@ export default function EnhancedTable({
   const [selected, setSelected] = useState<readonly string[]>([]);
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(false);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(25);
 
   const deleteOrdersMutation = useMutation({
     mutationFn: (data: AxiosRequestConfig<{ ids: readonly string[] }>) => {
@@ -374,7 +379,7 @@ export default function EnhancedTable({
                       onClick={() => {
                         handleToggleDrawer(row._id), setCurrOrderId(row._id);
                       }}
-                      align="right"
+                      align="center"
                     >
                       {row.phone}
                     </TableCell>
@@ -382,7 +387,7 @@ export default function EnhancedTable({
                       onClick={() => {
                         handleToggleDrawer(row._id), setCurrOrderId(row._id);
                       }}
-                      align="right"
+                      align="center"
                     >
                       {row.address}
                     </TableCell>
@@ -390,7 +395,7 @@ export default function EnhancedTable({
                       onClick={() => {
                         handleToggleDrawer(row._id), setCurrOrderId(row._id);
                       }}
-                      align="right"
+                      align="center"
                     >
                       {row.totalPrice}
                     </TableCell>
@@ -398,7 +403,7 @@ export default function EnhancedTable({
                       onClick={() => {
                         handleToggleDrawer(row._id), setCurrOrderId(row._id);
                       }}
-                      align="left"
+                      align="center"
                     >
                       <Typography>
                         {row.payment.includes("credit_card")
