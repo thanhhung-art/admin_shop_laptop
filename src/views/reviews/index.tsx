@@ -20,6 +20,7 @@ import {
 } from "@mui/material";
 import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
+import Image from "next/image";
 
 const ReviewPage = () => {
   const [filter, setFilter] = useState<"all" | "good" | "normal" | "bad">(
@@ -129,6 +130,12 @@ const ReviewPage = () => {
                   </Box>
 
                   <Box>
+                    <Box>
+                      <Typography variant="h6" fontSize={16} color="GrayText">
+                        {review.productName}
+                      </Typography>
+                    </Box>
+
                     <Box sx={{ margin: "0.3rem 0" }}>
                       <Stack direction="row" spacing={2} alignItems="center">
                         <Rating value={review.rating} readOnly />
@@ -137,38 +144,23 @@ const ReviewPage = () => {
                         </Typography>
                       </Stack>
                     </Box>
-                    <Box>
-                      <Typography variant="h6">
-                        <b>Review product:</b>
-                      </Typography>
-                      <Typography
-                        variant="h6"
-                        fontSize={16}
-                        color="GrayText"
-                        sx={{ marginLeft: 4 }}
-                      >
-                        {review.productName}
-                      </Typography>
-                    </Box>
 
                     <Box sx={{ margin: ".5rem 0" }}>
-                      <Typography variant="h6">
-                        <b>User review:</b>
-                      </Typography>
-                      <Typography color='black' variant="h6" sx={{ marginLeft: 4 }}>
+                      <Typography color="black" variant="h6">
                         {review.review}
                       </Typography>
                     </Box>
 
-                    <Stack direction="row">
-                      <Box
-                        sx={{
-                          height: "4rem",
-                          width: "4rem",
-                          background: "gray",
-                        }}
-                      ></Box>
-                    </Stack>
+                    {review.images && (
+                      <Stack direction="row">
+                        {review.images.map((image, i) => (
+                          <Box key={i} sx={{ height: 40, width: 80}}>
+                            <Image src={image} alt="image" fill />
+                          </Box>
+                        ))}
+                        <Box></Box>
+                      </Stack>
+                    )}
                   </Box>
                 </Stack>
 
