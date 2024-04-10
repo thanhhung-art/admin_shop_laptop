@@ -9,7 +9,7 @@ import {
   Tooltip,
   alpha,
 } from "@mui/material";
-import React from "react";
+import { useEffect, useState } from "react";
 import BellIcon from "@heroicons/react/24/solid/BellIcon";
 import UsersIcon from "@heroicons/react/24/solid/UsersIcon";
 import Bars3Icon from "@heroicons/react/24/solid/Bars3Icon";
@@ -18,6 +18,13 @@ import useMobile from "@/hooks/isMobile";
 
 const TopNav = () => {
   const { isMobile } = useMobile();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return <div></div>;
 
   return (
     <Box
