@@ -9,11 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import Head from "next/head";
 
 const Customers = () => {
-  const { data, isLoading, isError } = useQuery([GetCustomers], getUsers)
-
-  if (isLoading) return <div>loading</div>
-
-  if (isError) return <div>error</div>
+  const { data } = useQuery([GetCustomers], getUsers)
 
   return (
     <>
@@ -81,7 +77,7 @@ const Customers = () => {
               </div>
             </Stack>
             <SearchInput />
-            <TableCustomers data={data.data} />
+            { data && <TableCustomers data={data.data} />}
           </Stack>
         </Container>
       </Box>
