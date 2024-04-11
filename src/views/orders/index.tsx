@@ -19,20 +19,22 @@ import ListProducts from "@/components/orders/ListProducts";
 import { GetOrders } from "@/utils/keys";
 
 const Orders = () => {
-  const { data, isLoading } = useQuery([GetOrders], () => getOrders("all"));
+  const { data } = useQuery([GetOrders], () => getOrders("all"));
   const orderSorted = useMemo(() => {
     return data?.data.sort((a, b) => {
-      const dateA = Date.parse(a.createdAt)
-      const dateB = Date.parse(b.createdAt)
+      const dateA = Date.parse(a.createdAt);
+      const dateB = Date.parse(b.createdAt);
 
       return dateA - dateB;
     });
   }, [data]);
   const [open, setOpen] = useState(false);
   const [currOrderId, setCurrOrderId] = useState("");
-  const updateOrderStatusMutation = useMutation((dataToUPdate: IOrderUpdate<IOrder>) => {
-    return updateOrder(currOrderId, dataToUPdate);
-  });
+  const updateOrderStatusMutation = useMutation(
+    (dataToUPdate: IOrderUpdate<IOrder>) => {
+      return updateOrder(currOrderId, dataToUPdate);
+    }
+  );
 
   const currOrder: IOrder | undefined = useMemo(() => {
     if (orderSorted) {
@@ -61,8 +63,7 @@ const Orders = () => {
     updateOrderStatusMutation.mutate({ status: "cancelled" });
   };
 
-
-  if (!orderSorted || isLoading) return <div>loading</div>;
+  if (!orderSorted) return <div></div>;
 
   return (
     <Box
