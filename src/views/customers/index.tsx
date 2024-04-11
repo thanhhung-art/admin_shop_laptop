@@ -15,7 +15,7 @@ const Customers = () => {
     <>
       <Head>
         <title>
-          Customers | Devias Kit
+          Customers
         </title>
       </Head>
       <Box
