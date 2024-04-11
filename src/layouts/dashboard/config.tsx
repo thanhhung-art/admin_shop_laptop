@@ -62,31 +62,31 @@ export const items: IItems[] = [
       </SvgIcon>
     )
   },
-  {
-    title: "Account",
-    path: "/account",
-    icon: (
-      <SvgIcon fontSize="small">
-        <UserIcon />
-      </SvgIcon>
-    ),
-  },
-  {
-    title: "Login",
-    path: "/auth/login",
-    icon: (
-      <SvgIcon fontSize="small">
-        <LockClosedIcon />
-      </SvgIcon>
-    ),
-  },
-  {
-    title: "Register",
-    path: "/auth/register",
-    icon: (
-      <SvgIcon fontSize="small">
-        <UserPlusIcon />
-      </SvgIcon>
-    ),
-  },
+  // {
+  //   title: "Account",
+  //   path: "/account",
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <UserIcon />
+  //     </SvgIcon>
+  //   ),
+  // },
+  // {
+  //   title: "Login",
+  //   path: "/auth/login",
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <LockClosedIcon />
+  //     </SvgIcon>
+  //   ),
+  // },
+  // {
+  //   title: "Register",
+  //   path: "/auth/register",
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <UserPlusIcon />
+  //     </SvgIcon>
+  //   ),
+  // },
 ];
