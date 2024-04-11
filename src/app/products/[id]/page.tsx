@@ -3,7 +3,9 @@ import { ReactQueryHydrate } from "@/lib/react_query/reactQueryHydrate";
 import { getProduct } from "@/utils/fetch";
 import { GetProduct } from "@/utils/keys";
 import ProductDetails from "@/views/product/productDetails";
+import { Box, CircularProgress } from "@mui/material";
 import { dehydrate } from "@tanstack/react-query";
+import { Suspense } from "react";
 
 const page = async ({ params }: { params: { id: string } }) => {
   const queryClientLocal = queryClient();
@@ -14,7 +16,15 @@ const page = async ({ params }: { params: { id: string } }) => {
 
   return (
     <ReactQueryHydrate state={dehydratedState}>
-      <ProductDetails param={params.id} />
+      <Suspense
+        fallback={
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <CircularProgress />
+          </Box>
+        }
+      >
+        <ProductDetails param={params.id} />
+      </Suspense>
     </ReactQueryHydrate>
   );
 };

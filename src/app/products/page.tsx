@@ -1,11 +1,11 @@
-import { Box, Container, Stack, Typography } from "@mui/material";
-import ListProducts from "@/components/products/ListProducts";
-import SearchLaptop from "@/components/products/Search";
+import { Box, CircularProgress } from "@mui/material";
 import { queryClient } from "@/lib/react_query/queryClient";
 import { dehydrate } from "@tanstack/react-query";
 import { getProductsInfinity } from "@/utils/fetch";
 import { ReactQueryHydrate } from "@/lib/react_query/reactQueryHydrate";
 import { GetProductsInfinity } from "@/utils/keys";
+import ProductsPage from "@/views/products";
+import { Suspense } from "react";
 
 const page = async () => {
   const queryClientLocal = queryClient();
@@ -17,21 +17,15 @@ const page = async () => {
 
   return (
     <ReactQueryHydrate state={dehydratedState}>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          py: 8,
-        }}
+      <Suspense
+        fallback={
+          <Box display="flex" justifyContent="center">
+            <CircularProgress />
+          </Box>
+        }
       >
-        <Container maxWidth="xl">
-          <Stack spacing={4}>
-            <Typography variant="h4">Products</Typography>
-            <SearchLaptop />
-            <ListProducts />
-          </Stack>
-        </Container>
-      </Box>
+        <ProductsPage />
+      </Suspense>
     </ReactQueryHydrate>
   );
 };
