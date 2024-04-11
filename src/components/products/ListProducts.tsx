@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   Card,
+  CircularProgress,
   Grid,
   Rating,
   Stack,
@@ -30,7 +31,12 @@ const ListProducts = () => {
       }
     );
 
-  if (isLoading) return <div>loading</div>;
+  if (isLoading)
+    return (
+      <div>
+        <CircularProgress />
+      </div>
+    );
 
   if (isError) {
     return <div>something went wrong</div>;
@@ -60,7 +66,8 @@ const ListProducts = () => {
                         src={p.img}
                         fill
                         alt="laptop image"
-                        objectFit="contain"
+                        sizes="(max-width: 768px) 100%, (max-width: 1200px) 100%"
+                        style={{ objectFit: 'contain'}}
                       />
                     </Box>
                   </Link>
@@ -69,7 +76,7 @@ const ListProducts = () => {
                   sx={{ display: "flex", justifyContent: "center", my: 0.5 }}
                 >
                   <Box>
-                    <Rating value={5} readOnly />
+                    <Rating value={p.rating} readOnly />
                   </Box>
                 </Box>
                 <Typography
@@ -85,7 +92,9 @@ const ListProducts = () => {
       </Grid>
       <Stack direction="row" justifyContent="center">
         {hasNextPage && (
-          <Button onClick={() => fetchNextPage()}>show more</Button>
+          <Button variant="contained" onClick={() => fetchNextPage()}>
+            show more
+          </Button>
         )}
       </Stack>
     </>
