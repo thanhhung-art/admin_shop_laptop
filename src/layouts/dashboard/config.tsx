@@ -26,15 +26,15 @@ export const items: IItems[] = [
       </SvgIcon>
     ),
   },
-  {
-    title: "Customers",
-    path: "/customers",
-    icon: (
-      <SvgIcon fontSize="small">
-        <UsersIcon />
-      </SvgIcon>
-    ),
-  },
+  // {
+  //   title: "Customers",
+  //   path: "/customers",
+  //   icon: (
+  //     <SvgIcon fontSize="small">
+  //       <UsersIcon />
+  //     </SvgIcon>
+  //   ),
+  // },
   {
     title: "products",
     path: "/products",
