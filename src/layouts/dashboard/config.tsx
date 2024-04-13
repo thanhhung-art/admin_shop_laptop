@@ -19,7 +19,7 @@ export interface IItems {
 export const items: IItems[] = [
   {
     title: "Overview",
-    path: "/",
+    path: "/dashboard",
     icon: (
       <SvgIcon fontSize="small">
         <ChartBarIcon />
@@ -37,7 +37,7 @@ export const items: IItems[] = [
   // },
   {
     title: "products",
-    path: "/products",
+    path: "/dashboard/products",
     icon: (
       <SvgIcon fontSize="small">
         <ShoppingBagIcon />
@@ -46,7 +46,7 @@ export const items: IItems[] = [
   },
   {
     title: "orders",
-    path: "/orders",
+    path: "/dashboard/orders",
     icon: (
       <SvgIcon fontSize="small">
         <LockClosedIcon />
@@ -55,7 +55,7 @@ export const items: IItems[] = [
   },
   {
     title: "reviews",
-    path: "/reviews",
+    path: "/dashboard/reviews",
     icon: (
       <SvgIcon fontSize="small">
         <PencilIcon />
