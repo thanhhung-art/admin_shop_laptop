@@ -1,7 +1,5 @@
 import SignIn from "@/views/login";
 
-export default function SignInPage(a: string) {
+export default function page() {
   return <SignIn />;
 }
-
-SignInPage.isSignIn = true
