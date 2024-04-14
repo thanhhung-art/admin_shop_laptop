@@ -4,14 +4,8 @@ import { getOrders, getProductsInfinity } from "@/utils/fetch";
 import { GetOrders, GetProductsInfinity } from "@/utils/keys";
 import Home from "@/views/Home";
 import { dehydrate } from "@tanstack/react-query";
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
 
 export default async function page() {
-  const cookieStore = cookies();
-  if (!cookieStore.get("authtoken")) {
-    redirect("/auth/signIn");
-  }
   const queryClientLocal = queryClient();
   await queryClientLocal.prefetchInfiniteQuery(
     [GetProductsInfinity],
