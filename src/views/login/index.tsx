@@ -13,16 +13,38 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import useIsMounted from "@/hooks/isMounted";
+import { useMutation } from "@tanstack/react-query";
+import { Fetch } from "@/utils/fetch";
+import { useState } from "react";
+import { red } from "@mui/material/colors";
+import { useRouter } from "next/navigation";
 
-// TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme();
 
 export default function SignIn() {
   const { isMounted } = useIsMounted();
+  const [errors, setErrors] = useState({ email: "", password: "" });
+  const router = useRouter();
+
+  const signInMutation = useMutation({
+    mutationFn: (data: any) => {
+      return Fetch.post("/auth/login", data);
+    },
+    onSuccess(data) {
+      if (data.data.msg === "login success") router.push("/dashboard");
+    },
+    onError(res: { response: { data: { message: string } } }) {
+      if (res.response.data.message === "Email not found")
+        setErrors({ ...errors, email: "email not found" });
+      else if (res.response.data.message === "Invalid password")
+        setErrors({ ...errors, password: "invalid password" });
+    },
+  });
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
+    signInMutation.mutate({
       email: data.get("email"),
       password: data.get("password"),
     });
@@ -63,7 +85,14 @@ export default function SignIn() {
               name="email"
               autoComplete="email"
               autoFocus
+              onFocus={() => setErrors({ ...errors, email: "" })}
+              onChange={() => setErrors({ ...errors, email: "" })}
             />
+            {errors.email && (
+              <Typography fontSize={12} color={red[900]}>
+                {errors.email}
+              </Typography>
+            )}
             <TextField
               margin="normal"
               required
@@ -73,7 +102,14 @@ export default function SignIn() {
               type="password"
               id="password"
               autoComplete="current-password"
+              onFocus={() => setErrors({ ...errors, password: "" })}
+              onChange={() => setErrors({ ...errors, password: "" })}
             />
+            {errors.password && (
+              <Typography fontSize={12} color={red[900]}>
+                {errors.password}
+              </Typography>
+            )}
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
@@ -104,5 +140,3 @@ export default function SignIn() {
     </ThemeProvider>
   );
 }
-
-SignIn.isSignIn = true;
