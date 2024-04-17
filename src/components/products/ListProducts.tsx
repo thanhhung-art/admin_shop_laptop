@@ -60,7 +60,7 @@ const ListProducts = () => {
                     alignContent: "center",
                   }}
                 >
-                  <Link href={`/products/${p._id}`}>
+                  <Link href={`/dashboard/products/${p._id}`}>
                     <Box sx={{ position: "relative", height: 130, width: 290 }}>
                       <Image
                         src={p.img}
