@@ -52,7 +52,8 @@ const ShowImage = ({ base64Img, img, refresh }: IProps) => {
               alt="preview image"
               width={400}
               height={270}
-              objectFit="contain"
+              style={{ objectFit: 'contain' }}
+              priority
             />
           )}
         </Box>
