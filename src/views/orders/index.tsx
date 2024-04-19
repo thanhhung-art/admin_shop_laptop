@@ -19,7 +19,7 @@ import ListProducts from "@/components/orders/ListProducts";
 import { GetOrders } from "@/utils/keys";
 
 const Orders = () => {
-  const { data } = useQuery([GetOrders], () => getOrders("all"));
+  const { data, refetch } = useQuery([GetOrders], () => getOrders("all"));
   const orderSorted = useMemo(() => {
     return data?.data.sort((a, b) => {
       const dateA = Date.parse(a.createdAt);
@@ -29,38 +29,47 @@ const Orders = () => {
     });
   }, [data]);
   const [open, setOpen] = useState(false);
-  const [currOrderId, setCurrOrderId] = useState("");
+  const [currOrder, setCurrOrder] = useState<IOrder>();
   const updateOrderStatusMutation = useMutation(
     (dataToUPdate: IOrderUpdate<IOrder>) => {
-      return updateOrder(currOrderId, dataToUPdate);
+      return updateOrder(currOrder?._id || "", dataToUPdate);
     }
   );
 
-  const currOrder: IOrder | undefined = useMemo(() => {
-    if (orderSorted) {
-      const order = orderSorted.find(
-        (order: IOrder) => order._id === currOrderId
-      );
-      return order;
-    }
-    return undefined;
-  }, [orderSorted, currOrderId]);
-
   const handleCloseDrawer = () => setOpen(false);
   const handleToggleDrawer = (thisOrderId: string) => {
-    if (open && thisOrderId === currOrderId) {
+    if (open && thisOrderId === currOrder?._id) {
       setOpen(false);
       return;
     }
     setOpen(true);
   };
 
+  const handleChangeStatusInOrdersArr = (status: string) => {
+    if (currOrder) {
+      const index = data?.data.findIndex(
+        (order) => order._id === currOrder._id
+      );
+      if (data && index) {
+        data.data[index].status = status;
+      }
+    }
+  };
+
   const handleApproveOrder = () => {
     updateOrderStatusMutation.mutate({ status: "shipped" });
+    if (currOrder) {
+      handleChangeStatusInOrdersArr("shipped");
+      setCurrOrder({ ...currOrder, status: "shipped" });
+    }
   };
 
   const handleRejectOrder = () => {
     updateOrderStatusMutation.mutate({ status: "cancelled" });
+    if (currOrder) {
+      handleChangeStatusInOrdersArr("cancelled");
+      setCurrOrder({ ...currOrder, status: "cancelled" });
+    }
   };
 
   if (!orderSorted) return <div></div>;
@@ -80,7 +89,8 @@ const Orders = () => {
         <EnhancedTable
           orders={orderSorted}
           handleToggleDrawer={handleToggleDrawer}
-          setCurrOrderId={setCurrOrderId}
+          setCurrOrderId={setCurrOrder}
+          refetchFunc={refetch}
         />
       </Container>
       <Drawer
@@ -99,7 +109,7 @@ const Orders = () => {
         <Box sx={{ px: 1, pt: 12, pb: 1 }}>
           <Stack direction="row" justifyContent="space-between">
             <Typography variant="h6" component="h2" sx={{ fontSize: "16px" }}>
-              {currOrderId}
+              {currOrder?._id}
             </Typography>
             <SvgIcon
               fontSize="medium"
@@ -111,7 +121,7 @@ const Orders = () => {
           </Stack>
           {currOrder && (
             <Details
-              id={currOrderId}
+              id={currOrder._id}
               customerName={currOrder.username}
               date={currOrder.createdAt}
               totalAmount={currOrder.totalPrice}
@@ -131,6 +141,7 @@ const Orders = () => {
               color="primary"
               variant="contained"
               sx={{ mr: 2, borderRadius: 10 }}
+              disabled={currOrder?.status !== "pending"}
             >
               Approve
             </Button>
@@ -139,11 +150,12 @@ const Orders = () => {
               color="secondary"
               variant="outlined"
               sx={{ borderRadius: 10 }}
+              disabled={currOrder?.status !== "pending"}
             >
               Reject
             </Button>
           </Stack>
-          {open && currOrderId && currOrder !== null && (
+          {open && currOrder && (
             <ListProducts products={currOrder ? currOrder.products : []} />
           )}
         </Box>

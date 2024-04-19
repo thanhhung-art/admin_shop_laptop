@@ -30,14 +30,22 @@ import DeleteIcon from "@heroicons/react/24/solid/TrashIcon";
 import { visuallyHidden } from "@mui/utils";
 import { IOrder } from "@/types/order";
 import { Chip } from "@mui/material";
-import { useMutation } from "@tanstack/react-query";
+import {
+  useMutation,
+  RefetchOptions,
+  RefetchQueryFilters,
+  QueryObserverResult,
+} from "@tanstack/react-query";
 import { Fetch } from "@/utils/fetch";
 import { AxiosRequestConfig } from "axios";
-
+import { IGetOrders } from "@/types/order";
 interface IProps {
   orders: IOrder[];
   handleToggleDrawer: (thisOrderId: string) => void;
-  setCurrOrderId: Dispatch<SetStateAction<string>>;
+  setCurrOrderId: Dispatch<SetStateAction<IOrder | undefined>>;
+  refetchFunc: <TPageData>(
+    options?: (RefetchOptions & RefetchQueryFilters<TPageData>) | undefined
+  ) => Promise<QueryObserverResult<IGetOrders, unknown>>;
 }
 
 type Order = "asc" | "desc";
@@ -377,7 +385,7 @@ export default function EnhancedTable({
                     </TableCell>
                     <TableCell
                       onClick={() => {
-                        handleToggleDrawer(row._id), setCurrOrderId(row._id);
+                        handleToggleDrawer(row._id), setCurrOrderId(row);
                       }}
                       align="center"
                     >
@@ -385,7 +393,7 @@ export default function EnhancedTable({
                     </TableCell>
                     <TableCell
                       onClick={() => {
-                        handleToggleDrawer(row._id), setCurrOrderId(row._id);
+                        handleToggleDrawer(row._id), setCurrOrderId(row);
                       }}
                       align="center"
                     >
@@ -393,7 +401,7 @@ export default function EnhancedTable({
                     </TableCell>
                     <TableCell
                       onClick={() => {
-                        handleToggleDrawer(row._id), setCurrOrderId(row._id);
+                        handleToggleDrawer(row._id), setCurrOrderId(row);
                       }}
                       align="center"
                     >
@@ -401,7 +409,7 @@ export default function EnhancedTable({
                     </TableCell>
                     <TableCell
                       onClick={() => {
-                        handleToggleDrawer(row._id), setCurrOrderId(row._id);
+                        handleToggleDrawer(row._id), setCurrOrderId(row);
                       }}
                       align="center"
                     >
@@ -413,7 +421,7 @@ export default function EnhancedTable({
                     </TableCell>
                     <TableCell
                       onClick={() => {
-                        handleToggleDrawer(row._id), setCurrOrderId(row._id);
+                        handleToggleDrawer(row._id), setCurrOrderId(row);
                       }}
                       align="right"
                     >
