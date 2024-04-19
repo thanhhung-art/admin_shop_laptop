@@ -26,7 +26,7 @@ const OverviewTotalOrders = ({
   sx,
   value,
 }: IProps) => {
-  const { data } = useQuery([GetAmountOrders], getAmountOrders);
+  const { data } = useQuery([GetAmountOrders], () => getAmountOrders());
 
   return (
     <Suspense fallback={<div>loading</div>}>

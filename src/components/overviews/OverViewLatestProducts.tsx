@@ -1,5 +1,6 @@
 "use client";
 import { getProducts } from "@/utils/fetch";
+import { GetLatestProducts } from "@/utils/keys";
 import ArrowRightIcon from "@heroicons/react/24/solid/ArrowRightIcon";
 import EllipsisVerticalIcon from "@heroicons/react/24/solid/EllipsisVerticalIcon";
 import {
@@ -24,10 +25,12 @@ interface IProps {
 }
 
 const OverViewLatestProducts = ({ sx }: IProps) => {
-  const { data, isLoading } = useQuery(["getProducts"], () => getProducts("latest"));
+  const { data, isLoading } = useQuery([GetLatestProducts], () =>
+    getProducts("latest")
+  );
   const router = useRouter();
 
-  if (isLoading) return <div>loading</div>
+  if (isLoading) return <div>loading</div>;
 
   if (!data) return <div>error</div>;
 

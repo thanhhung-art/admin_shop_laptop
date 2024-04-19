@@ -2,16 +2,15 @@ import { Card, CardContent, CardHeader, Button } from "@mui/material";
 import Chart from "../chart";
 
 interface IProps {
-  sx: object,
-  data: object
+  sx: object;
 }
 
-const OverviewSales = ({ sx, data }: IProps) => {
+const OverviewSales = ({ sx }: IProps) => {
   return (
     <Card sx={sx}>
       <CardHeader title="Sales"></CardHeader>
       <CardContent>
-        <Chart data={data} />
+        <Chart />
       </CardContent>
     </Card>
   );

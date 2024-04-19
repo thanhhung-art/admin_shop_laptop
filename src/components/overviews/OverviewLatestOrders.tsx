@@ -1,5 +1,6 @@
 "use client";
 import { getOrders } from "@/utils/fetch";
+import { GetOrdersLatest } from "@/utils/keys";
 import ArrowRightIcon from "@heroicons/react/24/solid/ArrowRightIcon";
 import {
   Box,
@@ -24,12 +25,17 @@ interface IProps {
 }
 
 export const OverviewLatestOrders = ({ sx }: IProps) => {
-  const { data, isLoading } = useQuery(["getOrdersLatest"], () =>
+  const { data, isLoading } = useQuery([GetOrdersLatest], () =>
     getOrders("latest")
   );
   const router = useRouter();
 
-  if (isLoading) return <div><CircularProgress /></div>;
+  if (isLoading)
+    return (
+      <div>
+        <CircularProgress />
+      </div>
+    );
 
   return (
     <Card sx={sx}>

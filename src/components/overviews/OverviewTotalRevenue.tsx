@@ -11,7 +11,6 @@ import {
   Typography,
 } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
-import { Suspense } from "react";
 
 interface IProps {
   sx: object;
@@ -22,7 +21,7 @@ const OverviewTotalRevenue = ({ sx, value }: IProps) => {
   const { data } = useQuery([GetRevenue], getRevenue);
 
   return (
-    <Suspense fallback={<div>loading</div>}>
+    <>
       <Card sx={sx}>
         <CardContent>
           <Stack
@@ -51,7 +50,7 @@ const OverviewTotalRevenue = ({ sx, value }: IProps) => {
           </Stack>
         </CardContent>
       </Card>
-    </Suspense>
+    </>
   );
 };
 

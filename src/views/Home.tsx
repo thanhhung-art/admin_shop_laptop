@@ -47,7 +47,7 @@ export default function Home() {
               <OverviewTotalRevenue sx={{ height: "100%" }} value={75.5} />
             </Grid>
             <Grid item xs={12}>
-              <OverviewSales sx={{ height: "100%" }} data={{}} />
+              <OverviewSales sx={{ height: "100%" }} />
             </Grid>
             <Grid item xs={12} md={6} lg={4}>
               <OverViewLatestProducts sx={{ height: "100%" }} />

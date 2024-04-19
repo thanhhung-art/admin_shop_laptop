@@ -8,6 +8,8 @@ import {
 import { IReview } from "@/types/reviews";
 import axios from "axios";
 
+let token = "";
+
 export const Fetch = axios.create({
   baseURL: "http://localhost:5000/api",
   headers: {
@@ -15,6 +17,18 @@ export const Fetch = axios.create({
   },
   withCredentials: true,
 });
+
+Fetch.interceptors.request.use(
+  (config) => {
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 export const getProducts = async (query: string) => {
   const res = await Fetch(`/products?query=${query}`);
@@ -41,17 +55,20 @@ export const getUsers = async () => {
   return res.data as IGetUsers;
 };
 
-export const getOrders = async (query: string) => {
+export const getOrders = async (query: string, authtoken?: string) => {
+  if (authtoken && !token) token = authtoken;
   const res = await Fetch(`/orders?query=${query}`);
   return res.data as IGetOrders;
 };
 
-export const getAmountOrders = async () => {
+export const getAmountOrders = async (authtoken?: string) => {
+  if (authtoken && !token) token = authtoken;
   const res = await Fetch("orders/amount");
   return res.data as { msg: string; data: number };
 };
 
-export const getAmountOrdersPending = async () => {
+export const getAmountOrdersPending = async (authtoken?: string) => {
+  if (authtoken && !token) token = authtoken;
   const res = await Fetch(`orders/amount?status=pending`);
   return res.data as { msg: string; data: number };
 };
@@ -61,7 +78,8 @@ export const getRevenue = async () => {
   return res.data as { msg: string; data: number };
 };
 
-export const getSales = async (year: number) => {
+export const getSales = async (year: number, authtoken?: string) => {
+  if (authtoken && !token) token = authtoken;
   const res = await Fetch(`orders/sales_by_months/${year}`);
   return res.data as {
     msg: string;
@@ -85,5 +103,8 @@ export const getReviews = async (
 
 export const getReviewsInfinity = async (page: number) => {
   const res = await Fetch(`/reviews?checked=false&page=${page}`);
-  return res.data as { msg: string; data: { lastPage: number; nextPage: number; reviews: IReview[]}}
+  return res.data as {
+    msg: string;
+    data: { lastPage: number; nextPage: number; reviews: IReview[] };
+  };
 };

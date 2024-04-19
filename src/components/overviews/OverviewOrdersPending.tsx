@@ -18,7 +18,7 @@ interface IProps {
 }
 
 const OverviewOrdersPending = ({ sx }: IProps) => {
-  const { data } = useQuery([GetOrdersPending], getAmountOrdersPending);
+  const { data } = useQuery([GetOrdersPending], () => getAmountOrdersPending());
 
   return (
     <Suspense fallback={<div>loading</div>}>
