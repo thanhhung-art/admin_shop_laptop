@@ -8,10 +8,11 @@ import {
 import { IReview } from "@/types/reviews";
 import axios from "axios";
 
+const server_url = process.env.NEXT_PUBLIC_SERVER_URL;
 let token = "";
 
 export const Fetch = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: server_url,
   headers: {
     "Content-Type": "application/json",
   },
