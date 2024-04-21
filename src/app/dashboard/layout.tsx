@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-const CHECKAUTH_URL = process.env.CHECKAUTH_URL || "";
+const CHECKAUTH_URL = process.env.NEXT_PUBLIC_SERVER_URL || "";
 
 async function checkauth(authtoken: string): Promise<{ isadmin: boolean }> {
   const res = await fetch(CHECKAUTH_URL, {
