@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-const checkauth_url = process.env.NEXT_PUBLIC_SERVER_URL || "";
+const checkauth_url = process.env.NEXT_PUBLIC_CHECKAUTH_URL || "";
 async function checkauth(authtoken: string): Promise<{ isadmin: boolean }> {
   const res = await fetch(checkauth_url, {
     headers: {
@@ -28,7 +28,9 @@ export default async function DashBoardLayout({
       data = await checkauth(authtoken?.value || "");
       if (!data.isadmin) return redirect("/auth/signIn");
     } else return redirect("/auth/signIn");
-  } catch (err) {}
+  } catch (err) {
+    console.log(err);
+  }
 
   return <>{children}</>;
 }
