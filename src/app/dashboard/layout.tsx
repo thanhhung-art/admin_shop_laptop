@@ -2,10 +2,9 @@ import { ReactNode } from "react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-const CHECKAUTH_URL = process.env.NEXT_PUBLIC_SERVER_URL || "";
-
+const checkauth_url = process.env.NEXT_PUBLIC_SERVER_URL || "";
 async function checkauth(authtoken: string): Promise<{ isadmin: boolean }> {
-  const res = await fetch(CHECKAUTH_URL, {
+  const res = await fetch(checkauth_url, {
     headers: {
       Authorization: `Bearer ${authtoken}`,
       "Content-Type": "application/json",
@@ -22,11 +21,14 @@ export default async function DashBoardLayout({
   children: ReactNode;
 }) {
   const cookieStore = cookies();
-  const authtoken = cookieStore.get("authtoken");
-  if (authtoken?.value) {
-    const data = await checkauth(authtoken?.value || "");
-    if (!data.isadmin) return redirect("/auth/signIn");
-  } else return redirect("/auth/signIn");
+  try {
+    const authtoken = cookieStore.get("authtoken");
+    if (authtoken?.value) {
+      let data = { isadmin: false };
+      data = await checkauth(authtoken?.value || "");
+      if (!data.isadmin) return redirect("/auth/signIn");
+    } else return redirect("/auth/signIn");
+  } catch (err) {}
 
   return <>{children}</>;
 }
