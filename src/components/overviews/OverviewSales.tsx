@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, Button } from "@mui/material";
+import { Card, CardContent, CardHeader } from "@mui/material";
 import Chart from "../chart";
 
 interface IProps {

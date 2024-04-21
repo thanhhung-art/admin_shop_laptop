@@ -1,60 +1,47 @@
 "use client";
-import React, { Suspense, createRef, useEffect, useRef } from "react";
-import ChartJS, { Chart as ChartType } from "chart.js/auto";
-import { Box } from "@mui/material";
+import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { GetSales } from "@/utils/keys";
 import { getSales } from "@/utils/fetch";
+import { BarChart } from "@mui/x-charts/BarChart";
+import { Box, CircularProgress } from "@mui/material";
 
 const Chart = () => {
-  const acquisitionsRef = createRef<HTMLCanvasElement>();
-  const chartElem = useRef<ChartType | null>(null);
+  const { data, isLoading } = useQuery([GetSales], () => getSales(2024));
 
-  const { data } = useQuery([GetSales], () => getSales(2024));
+  const saleByMonth = useMemo(() => {
+    if (!data) return Array(12).fill(0);
+    return data.data.map((e) => e.totalSales);
+  }, [data]);
 
-  useEffect(() => {
-    (async function () {
-      if (acquisitionsRef.current && data) {
-        if (chartElem.current) {
-          chartElem.current.destroy();
-        }
-        chartElem.current = new ChartJS(acquisitionsRef.current, {
-          type: "bar",
-          data: {
-            labels: data.data.map((row) => row._id.month),
-            datasets: [
-              {
-                label: "Sales by month",
-                data: data.data.map((row) => row.totalSales),
-              },
-            ],
-          },
-          options: {
-            responsive: true,
-            scales: {
-              y: {
-                min: 0,
-                ticks: {
-                  stepSize: 1000,
-                },
-              },
-            },
-          },
-        });
-      }
-    })();
-  }, [acquisitionsRef, data]);
+  const months = useMemo(() => {
+    if (!data) return [];
+    return data.data.map((e) => "month " + e._id.month);
+  }, [data]);
+
+  if (isLoading)
+    return (
+      <Box sx={{ display: "flex", justifyContent: "center" }}>
+        <CircularProgress />
+      </Box>
+    );
 
   return (
-    <Suspense fallback={<div>loading</div>}>
-      <Box>
-        <canvas
-          style={{ maxHeight: 400 }}
-          id="acquisitions"
-          ref={acquisitionsRef}
-        ></canvas>
-      </Box>
-    </Suspense>
+    <BarChart
+      xAxis={[
+        {
+          id: "barCategories",
+          data: months,
+          scaleType: "band",
+        },
+      ]}
+      series={[
+        {
+          data: saleByMonth,
+        },
+      ]}
+      height={300}
+    />
   );
 };
 
