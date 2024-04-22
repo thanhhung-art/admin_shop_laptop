@@ -33,7 +33,6 @@ export default async function DashBoardLayout({
     } else return redirect("/auth/signIn");
   } catch (err) {
     console.log(err);
-    redirect("/auth/signIn");
   }
 
   return <>{children}</>;
