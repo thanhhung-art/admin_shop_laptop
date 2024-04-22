@@ -6,7 +6,6 @@ const checkauth_url = process.env.NEXT_PUBLIC_CHECKAUTH_URL || "";
 async function checkauth(authtoken: string): Promise<{ isadmin: boolean }> {
   if (authtoken) {
     const res = await fetch(checkauth_url, {
-      method: "POST",
       headers: {
         Authorization: `Bearer ${authtoken}`,
         "Content-Type": "application/json",
