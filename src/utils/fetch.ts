@@ -19,18 +19,6 @@ export const Fetch = axios.create({
   withCredentials: true,
 });
 
-// Fetch.interceptors.request.use(
-//   (config) => {
-//     if (token) {
-//       config.headers.Authorization = `Bearer ${token}`;
-//     }
-//     return config;
-//   },
-//   (error) => {
-//     return Promise.reject(error);
-//   }
-// );
-
 export const getProducts = async (query: string) => {
   const res = await Fetch(`/products?query=${query}`);
   return res.data as IGetProducts;
