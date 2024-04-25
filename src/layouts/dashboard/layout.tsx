@@ -1,21 +1,32 @@
-import React, { ReactNode } from "react";
+"use client";
+
+import { ReactNode, useEffect, useState } from "react";
 import TopNav from "./topNav";
 import SideNav from "./sideNav";
-import { Box } from "@mui/material";
-import { cookies } from "next/headers";
+import { Box, CircularProgress } from "@mui/material";
+import { useRouter } from "next/navigation";
 import { checkauth } from "@/utils/fetch";
-import { redirect } from "next/navigation";
+
 interface IProps {
   children: ReactNode;
+  authtoken?: string;
 }
+const DashBoardLayout = ({ children, authtoken }: IProps) => {
+  const [validate, setValidate] = useState(false);
+  const router = useRouter();
 
-const DashBoardLayout = async ({ children }: IProps) => {
-  const cookieStore = await cookies();
-  const authtoken = cookieStore.get("authtoken");
+  useEffect(() => {
+    const authencation = async function () {
+      let data = { isadmin: false };
+      data = await checkauth(authtoken);
+      if (!data.isadmin) {
+        return router.push("/auth/signIn");
+      }
+      setValidate(true);
+    };
 
-  let data = { isadmin: false };
-  data = await checkauth(authtoken?.value);
-  if (!data.isadmin) redirect("/auth/signIn");
+    authencation();
+  }, [authtoken, router]);
 
   return (
     <>
@@ -26,7 +37,20 @@ const DashBoardLayout = async ({ children }: IProps) => {
           paddingLeft: `${280}px`,
         }}
       >
-        {children}
+        {validate ? (
+          children
+        ) : (
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              height: "100vh",
+              alignItems: "center",
+            }}
+          >
+            <CircularProgress />
+          </Box>
+        )}
       </Box>
     </>
   );
