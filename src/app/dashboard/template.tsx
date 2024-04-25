@@ -1,4 +1,6 @@
 import DashBoardLayout from "@/layouts/dashboard/layout";
+import { checkauth } from "@/utils/fetch";
+import { redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { ReactElement } from "react";
 
@@ -9,5 +11,7 @@ export default async function Template({
 }) {
   const cookieStore = await cookies();
   const authtoken = cookieStore.get("authtoken")?.value as string | undefined;
-  return <DashBoardLayout authtoken={authtoken}>{children}</DashBoardLayout>;
+  const { isadmin } = await checkauth(authtoken);
+  if (!isadmin) redirect("/auth/signIn");
+  return <DashBoardLayout>{children}</DashBoardLayout>;
 }

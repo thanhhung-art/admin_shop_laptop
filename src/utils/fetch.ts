@@ -120,6 +120,7 @@ export async function checkauth(
         Authorization: `Bearer ${authtoken}`,
         "Content-Type": "application/json",
       },
+      credentials: "include",
     });
 
     if (!res.ok) return { isadmin: false };
