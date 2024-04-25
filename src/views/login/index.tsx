@@ -28,7 +28,7 @@ export default function SignIn() {
 
   const signInMutation = useMutation({
     mutationFn: (data: any) => {
-      return Fetch.post("/auth/login", data);
+      return Fetch.post("/auth/login", data, { withCredentials: true });
     },
     onSuccess(data) {
       if (data.data.msg === "login success") router.push("/dashboard");
