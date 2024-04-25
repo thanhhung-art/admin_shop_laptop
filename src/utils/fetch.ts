@@ -109,3 +109,21 @@ export const getReviewsInfinity = async (page: number) => {
     data: { lastPage: number; nextPage: number; reviews: IReview[] };
   };
 };
+
+const checkauth_url = process.env.NEXT_PUBLIC_CHECKAUTH_URL || "";
+export async function checkauth(
+  authtoken: string | undefined
+): Promise<{ isadmin: boolean }> {
+  if (authtoken) {
+    const res = await fetch(checkauth_url, {
+      headers: {
+        Authorization: `Bearer ${authtoken}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!res.ok) return { isadmin: false };
+    return res.json();
+  }
+  return { isadmin: false };
+}
