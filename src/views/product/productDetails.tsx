@@ -2,16 +2,16 @@
 import ShowImage from "@/components/products/product/selectImage";
 import { Box, Button, CircularProgress, Container, Stack } from "@mui/material";
 import AddDetails from "@/components/products/product/details";
-import { Fetch, getProduct } from "@/utils/fetch";
+import { FetchData, getProduct } from "@/utils/fetch";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { IGetProduct, IUpdateProduct } from "@/types/product";
 import { useRef } from "react";
 import { GetProduct } from "@/utils/keys";
 import { configure } from "@/utils/global";
 
-type TColors = { color: string; quantity: number}[]
+type TColors = { color: string; quantity: number }[];
 type TValue = string | string[] | boolean | TColors;
-export type TOnInputChange = (name: string, value: TValue) => void
+export type TOnInputChange = (name: string, value: TValue) => void;
 
 const ProductDetails = ({ param }: { param: string }) => {
   const queryClient = useQueryClient();
@@ -24,7 +24,7 @@ const ProductDetails = ({ param }: { param: string }) => {
   );
 
   const uploadEditedProduct = useMutation(
-    (data: IUpdateProduct) => Fetch.put(`/products/${param}`, data),
+    (data: IUpdateProduct) => FetchData.put(`/products/${param}`, data),
     {
       onSuccess() {
         queryClient.invalidateQueries({ queryKey: ["editProduct"] });
@@ -44,15 +44,15 @@ const ProductDetails = ({ param }: { param: string }) => {
 
     if (configure.includes(key)) {
       if (productInfo.current.configure) {
-        productInfo.current.configure[key] = value
+        productInfo.current.configure[key] = value;
       } else {
-        productInfo.current.configure = {}
-        productInfo.current.configure[key] = value
+        productInfo.current.configure = {};
+        productInfo.current.configure[key] = value;
       }
-      return
+      return;
     }
-    
-    productInfo.current[key] = value
+
+    productInfo.current[key] = value;
   };
 
   const handleSubmit = () => {

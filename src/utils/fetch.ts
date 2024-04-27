@@ -7,15 +7,13 @@ import {
 } from "@/types/product";
 import { IReview } from "@/types/reviews";
 
-let token = "";
-
 class FetchClass {
   readonly baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || "";
   headers: HeadersInit | undefined = {
     "Content-Type": "application/json",
   };
 
-  async get(url: string, headers?: { Authorization?: string }) {
+  async get(url: string, headers?: HeadersInit) {
     return fetch(this.baseUrl + url, {
       headers: {
         ...this.headers,
@@ -23,11 +21,7 @@ class FetchClass {
       credentials: "include",
     });
   }
-  async post<TBody>(
-    url: string,
-    body: TBody,
-    headers?: { Authorization?: string }
-  ) {
+  async post<TBody>(url: string, body: TBody, headers?: HeadersInit) {
     return fetch(this.baseUrl + url, {
       method: "POST",
       headers: {
@@ -38,11 +32,7 @@ class FetchClass {
       credentials: "include",
     });
   }
-  async put<TBody>(
-    url: string,
-    body: TBody,
-    headers?: { Authorization?: string }
-  ) {
+  async put<TBody>(url: string, body: TBody, headers?: HeadersInit) {
     return fetch(this.baseUrl + url, {
       method: "PUT",
       headers: {
@@ -53,7 +43,7 @@ class FetchClass {
       credentials: "include",
     });
   }
-  async delete(url: string, headers?: { Authorization?: string }) {
+  async delete(url: string, headers?: HeadersInit) {
     return fetch(this.baseUrl + url, {
       method: "DELETE",
       headers: {
@@ -65,7 +55,7 @@ class FetchClass {
   }
 }
 
-const FetchData = new FetchClass();
+export const FetchData = new FetchClass();
 
 export const getProducts = async (query: string) => {
   const res = await FetchData.get(`/products?query=${query}`);
@@ -92,20 +82,17 @@ export const getUsers = async () => {
   return (await res.json()) as IGetUsers;
 };
 
-export const getOrders = async (query: string, authtoken?: string) => {
-  if (authtoken && !token) token = authtoken;
+export const getOrders = async (query: string) => {
   const res = await FetchData.get(`/orders?query=${query}`);
   return (await res.json()) as IGetOrders;
 };
 
-export const getAmountOrders = async (authtoken?: string) => {
-  if (authtoken && !token) token = authtoken;
+export const getAmountOrders = async () => {
   const res = await FetchData.get("/orders/amount");
   return (await res.json()) as { msg: string; data: number };
 };
 
-export const getAmountOrdersPending = async (authtoken?: string) => {
-  if (authtoken && !token) token = authtoken;
+export const getAmountOrdersPending = async () => {
   const res = await FetchData.get(`/orders/amount?status=pending`);
   return (await res.json()) as { msg: string; data: number };
 };
@@ -115,8 +102,7 @@ export const getRevenue = async () => {
   return (await res.json()) as { msg: string; data: number };
 };
 
-export const getSales = async (year: number, authtoken?: string) => {
-  if (authtoken && !token) token = authtoken;
+export const getSales = async (year: number) => {
   const res = await FetchData.get(`/orders/sales_by_months/${year}`);
   return (await res.json()) as {
     msg: string;

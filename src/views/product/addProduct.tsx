@@ -5,8 +5,8 @@ import AddDetails from "@/components/products/product/details";
 import { useRef, useState } from "react";
 import { IProduct, IUpdateProduct } from "@/types/product";
 import { useMutation } from "@tanstack/react-query";
-import { Fetch } from "@/utils/fetch";
 import { configure, spaceCaseToCamelCase } from "@/utils/global";
+import { FetchData } from "@/utils/fetch";
 
 const AddProduct = () => {
   const productInfo = useRef<IUpdateProduct>({} as IUpdateProduct);
@@ -15,7 +15,7 @@ const AddProduct = () => {
 
   const addProductMutation = useMutation(
     (data: IUpdateProduct) => {
-      return Fetch.post("/products", data);
+      return FetchData.post("/products", data);
     },
     {
       onSuccess() {

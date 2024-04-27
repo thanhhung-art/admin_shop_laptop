@@ -1,7 +1,7 @@
 "use client";
 
 import { IReview } from "@/types/reviews";
-import { Fetch, getReviewsInfinity } from "@/utils/fetch";
+import { FetchData, getReviewsInfinity } from "@/utils/fetch";
 import { GetReviewsInfinity } from "@/utils/keys";
 import {
   Box,
@@ -39,10 +39,10 @@ const ReviewPage = () => {
       data?: { checked: boolean };
     }) => {
       if (data) {
-        return Fetch.put("/reviews/" + reviewId, data);
+        return FetchData.put("/reviews/" + reviewId, data);
       }
 
-      return Fetch.delete("/reviews/" + reviewId);
+      return FetchData.delete("/reviews/" + reviewId);
     },
   });
 
@@ -154,7 +154,7 @@ const ReviewPage = () => {
                     {review.images && (
                       <Stack direction="row">
                         {review.images.map((image, i) => (
-                          <Box key={i} sx={{ height: 40, width: 80}}>
+                          <Box key={i} sx={{ height: 40, width: 80 }}>
                             <Image src={image} alt="image" fill />
                           </Box>
                         ))}
