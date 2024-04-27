@@ -4,53 +4,39 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import useIsMounted from "@/hooks/isMounted";
-import { useMutation } from "@tanstack/react-query";
-import { Fetch } from "@/utils/fetch";
-import { useState } from "react";
+import { FormEvent, useState } from "react";
 import { red } from "@mui/material/colors";
 import { useRouter } from "next/navigation";
+import { signin } from "@/actions/auth";
 
 const defaultTheme = createTheme();
 
 export default function SignIn() {
   const { isMounted } = useIsMounted();
-  const [errors, setErrors] = useState({ email: "", password: "" });
+  const [errors, setErrors] = useState<{ email: string[]; password: string[] }>(
+    { email: [], password: [] }
+  );
   const router = useRouter();
 
-  const signInMutation = useMutation({
-    mutationFn: (data: any) => {
-      return Fetch.post("/auth/login", data, {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      });
-    },
-    onSuccess(data) {
-      if (data.data.msg === "login success") router.push("/dashboard");
-    },
-    onError(res: { response: { data: { message: string } } }) {
-      if (res.response.data.message === "Email not found")
-        setErrors({ ...errors, email: "email not found" });
-      else if (res.response.data.message === "Invalid password")
-        setErrors({ ...errors, password: "invalid password" });
-    },
-  });
+  const handleFormSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const res = await signin(formData);
+    console.log(res);
+    if (res.message === "success") {
+      router.push("/dashboard");
+    }
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    signInMutation.mutate({
-      email: data.get("email"),
-      password: data.get("password"),
-    });
+    if (res.errors?.email) {
+      setErrors({ ...errors, email: res.errors.email });
+    } else if (res.errors?.password) {
+      setErrors({ ...errors, password: res.errors.password });
+    }
   };
 
   if (!isMounted) return <div></div>;
@@ -67,18 +53,11 @@ export default function SignIn() {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-            {/* <LockOutlinedIcon /> */}
-          </Avatar>
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}></Avatar>
           <Typography component="h1" variant="h5">
             Sign in
           </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
-          >
+          <Box component="form" sx={{ mt: 1 }} onSubmit={handleFormSubmit}>
             <TextField
               margin="normal"
               required
@@ -88,14 +67,15 @@ export default function SignIn() {
               name="email"
               autoComplete="email"
               autoFocus
-              onFocus={() => setErrors({ ...errors, email: "" })}
-              onChange={() => setErrors({ ...errors, email: "" })}
+              onFocus={() => setErrors({ ...errors, email: [] })}
+              onChange={() => setErrors({ ...errors, email: [] })}
             />
-            {errors.email && (
-              <Typography fontSize={12} color={red[900]}>
-                {errors.email}
-              </Typography>
-            )}
+            {errors.email &&
+              errors.email.map((err) => (
+                <Typography key={err} fontSize={12} color={red[900]}>
+                  {err}
+                </Typography>
+              ))}
             <TextField
               margin="normal"
               required
@@ -105,18 +85,19 @@ export default function SignIn() {
               type="password"
               id="password"
               autoComplete="current-password"
-              onFocus={() => setErrors({ ...errors, password: "" })}
-              onChange={() => setErrors({ ...errors, password: "" })}
+              onFocus={() => setErrors({ ...errors, password: [] })}
+              onChange={() => setErrors({ ...errors, password: [] })}
             />
-            {errors.password && (
-              <Typography fontSize={12} color={red[900]}>
-                {errors.password}
-              </Typography>
-            )}
-            <FormControlLabel
+            {errors.password &&
+              errors.password.map((err) => (
+                <Typography key={err} fontSize={12} color={red[900]}>
+                  {err}
+                </Typography>
+              ))}
+            {/* <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}
               label="Remember me"
-            />
+            /> */}
             <Button
               type="submit"
               fullWidth
@@ -125,18 +106,18 @@ export default function SignIn() {
             >
               Sign In
             </Button>
-            <Grid container>
+            {/* <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
-                  Forgot password?
-                </Link>
+              <Link href="#" variant="body2">
+              Forgot password?
+              </Link>
               </Grid>
-              {/* <Grid item>
-                <Link href="#" variant="body2">
-                  {"Don't have an account? Sign Up"}
-                </Link>
-              </Grid> */}
-            </Grid>
+              <Grid item>
+              <Link href="#" variant="body2">
+              {"Don't have an account? Sign Up"}
+              </Link>
+              </Grid>
+            </Grid> */}
           </Box>
         </Box>
       </Container>
