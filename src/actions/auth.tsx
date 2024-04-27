@@ -26,9 +26,13 @@ export async function signin(formData: FormData) {
     body: JSON.stringify({ email, password }),
   });
 
+  if (!res.ok) {
+    return { message: "fetch failed" };
+  }
+
   const user = await res.json();
 
-  if (!user) {
+  if (!user || !user.authtoken || !user.isadmin) {
     return {
       message: "An error occurred while login.",
     };
