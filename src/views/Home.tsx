@@ -7,6 +7,7 @@ import OverviewTotalOrders from "@/components/overviews/OverviewTotalOrders";
 import OverviewTotalRevenue from "@/components/overviews/OverviewTotalRevenue";
 import { Box, Container, Grid } from "@mui/material";
 import Head from "next/head";
+import { Suspense } from "react";
 
 export default function Home() {
   return (
@@ -47,7 +48,9 @@ export default function Home() {
               <OverviewTotalRevenue sx={{ height: "100%" }} value={75.5} />
             </Grid>
             <Grid item xs={12}>
-              <OverviewSales sx={{ height: "100%" }} />
+              <Suspense fallback={<div>loading</div>}>
+                <OverviewSales sx={{ height: "100%" }} />
+              </Suspense>
             </Grid>
             <Grid item xs={12} md={6} lg={4}>
               <OverViewLatestProducts sx={{ height: "100%" }} />

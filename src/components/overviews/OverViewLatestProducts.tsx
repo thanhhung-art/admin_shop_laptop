@@ -28,6 +28,7 @@ const OverViewLatestProducts = ({ sx }: IProps) => {
   const { data, isLoading } = useQuery([GetLatestProducts], () =>
     getProducts("latest")
   );
+
   const router = useRouter();
 
   if (isLoading) return <div>loading</div>;
