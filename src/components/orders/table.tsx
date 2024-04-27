@@ -36,8 +36,6 @@ import {
   RefetchQueryFilters,
   QueryObserverResult,
 } from "@tanstack/react-query";
-import { Fetch } from "@/utils/fetch";
-import { AxiosRequestConfig } from "axios";
 import { IGetOrders } from "@/types/order";
 interface IProps {
   orders: IOrder[];
@@ -231,8 +229,14 @@ export default function EnhancedTable({
   const [rowsPerPage, setRowsPerPage] = useState(25);
 
   const deleteOrdersMutation = useMutation({
-    mutationFn: (data: AxiosRequestConfig<{ ids: readonly string[] }>) => {
-      return Fetch.delete("/orders", data);
+    mutationFn: (data: { data: { ids: readonly string[] } }) => {
+      return fetch("/orders", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
     },
   });
 
