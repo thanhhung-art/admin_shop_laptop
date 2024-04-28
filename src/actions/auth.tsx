@@ -32,7 +32,7 @@ export async function signin(formData: FormData) {
 
   const user = await res.json();
 
-  if (!user || !user.authtoken || !user.isadmin) {
+  if (!user.data || !user.data.authtoken || !user.data.isadmin) {
     return {
       message: "An error occurred while login.",
       data: user,
