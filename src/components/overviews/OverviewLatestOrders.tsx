@@ -51,28 +51,29 @@ export const OverviewLatestOrders = ({ sx }: IProps) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data?.data.map((order) => {
-              const dateObj = new Date(order.createdAt);
-              const hours = dateObj.getHours();
-              const minutes = dateObj.getMinutes();
-              const dateReformated = dateObj.toLocaleDateString(
-                navigator.language,
-                {
-                  year: "numeric",
-                  day: "2-digit",
-                  month: "2-digit",
-                }
-              );
+            {Array.isArray(data?.data) &&
+              data?.data.map((order) => {
+                const dateObj = new Date(order.createdAt);
+                const hours = dateObj.getHours();
+                const minutes = dateObj.getMinutes();
+                const dateReformated = dateObj.toLocaleDateString(
+                  navigator.language,
+                  {
+                    year: "numeric",
+                    day: "2-digit",
+                    month: "2-digit",
+                  }
+                );
 
-              return (
-                <TableRow hover key={order._id}>
-                  <TableCell>{order.phone}</TableCell>
-                  <TableCell>{order.username}</TableCell>
-                  <TableCell>{`${hours}: ${minutes} - ${dateReformated}`}</TableCell>
-                  <TableCell>{order.status}</TableCell>
-                </TableRow>
-              );
-            })}
+                return (
+                  <TableRow hover key={order._id}>
+                    <TableCell>{order.phone}</TableCell>
+                    <TableCell>{order.username}</TableCell>
+                    <TableCell>{`${hours}: ${minutes} - ${dateReformated}`}</TableCell>
+                    <TableCell>{order.status}</TableCell>
+                  </TableRow>
+                );
+              })}
           </TableBody>
         </Table>
       </Box>
