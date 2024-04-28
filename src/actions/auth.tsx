@@ -35,7 +35,6 @@ export async function signin(formData: FormData) {
   if (!user.data || !user.data.authtoken || !user.data.isadmin) {
     return {
       message: "An error occurred while login.",
-      data: user,
     };
   }
 
