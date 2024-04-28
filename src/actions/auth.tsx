@@ -38,15 +38,15 @@ export async function signin(formData: FormData) {
     };
   }
 
-  // save authtoken
-  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-  cookies().set("authtoken", user.data.authtoken, {
-    httpOnly: true,
-    secure: true,
-    expires: expiresAt,
-    sameSite: "lax",
-    path: "/",
-  });
+  // // save authtoken
+  // const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+  // cookies().set("authtoken", user.data.authtoken, {
+  //   httpOnly: true,
+  //   secure: true,
+  //   expires: expiresAt,
+  //   sameSite: "lax",
+  //   path: "/",
+  // });
 
   // create session cookie
   const session = await getSession();

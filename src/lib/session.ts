@@ -33,3 +33,10 @@ export const getSession = async () => {
 
   return session;
 };
+
+export const getCookie = async () => {
+  const session = await getIronSession<SessionData>(cookies(), sessionOptions);
+
+  if (session.authtoken) return session.authtoken;
+  return "";
+};

@@ -1,3 +1,4 @@
+import { getAuthtoken } from "@/actions/getAuthtoken";
 import { IGetUsers } from "@/types/customer";
 import { IGetOrder, IGetOrders, IOrder, IOrderUpdate } from "@/types/order";
 import {
@@ -8,50 +9,58 @@ import {
 import { IReview } from "@/types/reviews";
 
 class FetchClass {
+  private token = "";
   readonly baseUrl = process.env.NEXT_PUBLIC_SERVER_URL || "";
-  headers: HeadersInit | undefined = {
-    "Content-Type": "application/json",
-  };
 
-  async get(url: string, headers?: HeadersInit) {
+  get headers(): HeadersInit {
+    return {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${this.token}`,
+    };
+  }
+
+  async initializeToken() {
+    return await getAuthtoken();
+  }
+
+  async get(url: string) {
+    await this.ensureToken();
     return fetch(this.baseUrl + url, {
-      headers: {
-        ...this.headers,
-      },
-      credentials: "include",
+      headers: this.headers,
+      //credentials: 'include'
     });
   }
-  async post<TBody>(url: string, body: TBody, headers?: HeadersInit) {
+  async post<TBody>(url: string, body: TBody) {
+    await this.ensureToken();
     return fetch(this.baseUrl + url, {
       method: "POST",
-      headers: {
-        ...this.headers,
-        ...headers,
-      },
+      headers: this.headers,
       body: JSON.stringify(body),
-      credentials: "include",
+      //credentials: "include",
     });
   }
-  async put<TBody>(url: string, body: TBody, headers?: HeadersInit) {
+  async put<TBody>(url: string, body: TBody) {
+    await this.ensureToken();
     return fetch(this.baseUrl + url, {
       method: "PUT",
-      headers: {
-        ...this.headers,
-        ...headers,
-      },
+      headers: this.headers,
       body: JSON.stringify(body),
-      credentials: "include",
+      //credentials: "include",
     });
   }
-  async delete(url: string, headers?: HeadersInit) {
+  async delete(url: string) {
+    await this.ensureToken();
     return fetch(this.baseUrl + url, {
       method: "DELETE",
-      headers: {
-        ...this.headers,
-        ...headers,
-      },
-      credentials: "include",
+      headers: this.headers,
+      //credentials: "include",
     });
+  }
+
+  private async ensureToken() {
+    if (!this.token) {
+      this.token = await this.initializeToken();
+    }
   }
 }
 
