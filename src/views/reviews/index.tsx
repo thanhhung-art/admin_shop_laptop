@@ -18,11 +18,16 @@ import {
   Rating,
   Card,
 } from "@mui/material";
-import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import Image from "next/image";
 
 const ReviewPage = () => {
+  const queryClient = useQueryClient();
   const [filter, setFilter] = useState<"all" | "good" | "normal" | "bad">(
     "all"
   );
@@ -33,24 +38,27 @@ const ReviewPage = () => {
   const verifyReviewMutation = useMutation({
     mutationFn: ({
       reviewId,
-      data,
+      dataToSend,
     }: {
       reviewId: string;
-      data?: { checked: boolean };
+      dataToSend?: { checked: boolean };
     }) => {
-      if (data) {
-        return FetchData.put("/reviews/" + reviewId, data);
+      if (dataToSend) {
+        return FetchData.put("/reviews/status/" + reviewId, dataToSend);
       }
 
       return FetchData.delete("/reviews/" + reviewId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries([GetReviewsInfinity]);
     },
   });
 
   const handleVerifyReview = (
     reviewId: string,
-    data?: { checked: boolean }
+    dataToSend?: { checked: boolean }
   ) => {
-    verifyReviewMutation.mutate({ reviewId, data });
+    verifyReviewMutation.mutate({ reviewId, dataToSend });
   };
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -152,10 +160,18 @@ const ReviewPage = () => {
                     </Box>
 
                     {review.images && (
-                      <Stack direction="row">
+                      <Stack direction="row" spacing={1}>
                         {review.images.map((image, i) => (
-                          <Box key={i} sx={{ height: 40, width: 80 }}>
-                            <Image src={image} alt="image" fill />
+                          <Box
+                            key={i}
+                            sx={{ height: 80, width: 80, position: "relative" }}
+                          >
+                            <Image
+                              src={image}
+                              alt="image"
+                              fill
+                              style={{ objectFit: "cover" }}
+                            />
                           </Box>
                         ))}
                         <Box></Box>
