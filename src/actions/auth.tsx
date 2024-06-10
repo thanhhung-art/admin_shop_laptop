@@ -2,7 +2,6 @@
 
 import { SignupFormSchema } from "@/lib/definitions";
 import { getSession } from "@/lib/session";
-import { cookies } from "next/headers";
 
 export async function signin(formData: FormData) {
   const validatedFields = SignupFormSchema.safeParse({
@@ -37,16 +36,6 @@ export async function signin(formData: FormData) {
       message: "An error occurred while login.",
     };
   }
-
-  // // save authtoken
-  // const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
-  // cookies().set("authtoken", user.data.authtoken, {
-  //   httpOnly: true,
-  //   secure: true,
-  //   expires: expiresAt,
-  //   sameSite: "lax",
-  //   path: "/",
-  // });
 
   // create session cookie
   const session = await getSession();

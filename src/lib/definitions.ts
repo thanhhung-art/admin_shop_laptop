@@ -28,7 +28,7 @@ export const defaultSession: SessionData = {
   authtoken: "",
 };
 
-const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+const expiresAt = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000);
 
 export const sessionOptions: SessionOptions = {
   password: process.env.SESSION_SECRET!,
